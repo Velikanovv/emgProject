@@ -1,0 +1,64 @@
+{% extends 'staff_panel/_userblank.html' %}
+{% load static %}
+
+{% block usrcontent %}
+    <div class="">
+        <div class="nk-tb-list nk-tb-orders">
+            <div class="nk-tb-item nk-tb-head">
+                <div class="nk-tb-col nk-tb-orders-type"><span>Тип</span></div>
+                <div class="nk-tb-col"><span>Действие</span></div>
+                <div class="nk-tb-col tb-col-sm"><span>Дата</span></div>
+                <div class="nk-tb-col tb-col-xxl"><span>Время</span></div>
+                <div class="nk-tb-col tb-col-sm text-right"><span>Баланс</span></div>
+                <div class="nk-tb-col text-right"><span>Сумма пополнения</span></div>
+            </div><!-- .nk-tb-item -->
+            {% for h in history %}
+                <div class="nk-tb-item">
+                    <div class="nk-tb-col nk-tb-orders-type">
+                        <ul class="icon-overlap">
+                            {% if h.type == 1 %}
+                                <li><em class="bg-{% if h.status == 1 %}success{% endif %}{% if h.status == 2 %}danger{% endif %}{% if h.status == 3 %}danger{% endif %}-dim icon-circle icon ni ni-arrow-down-left"></em></li>
+                            {% endif %}
+                            {% if h.type == 2 %}
+                                <li><em class="bg-{% if h.status == 1 %}success{% endif %}{% if h.status == 2 %}danger{% endif %}{% if h.status == 3 %}danger{% endif %}-dim icon-circle icon ni ni-arrow-up-right"></em></li>
+                            {% endif %}
+                            {% if h.type == 3 %}
+                                <li><em class="bg-{% if h.status == 1 %}success{% endif %}{% if h.status == 2 %}danger{% endif %}{% if h.status == 3 %}danger{% endif %}-dim icon-circle icon ni ni-invest"></em></li>
+                            {% endif %}
+                        </ul>
+                    </div>
+                    <div class="nk-tb-col">
+                        {% if h.type == 1 %}
+                            <span class="tb-lead">Пополнение счета</span>
+                        {% endif %}
+                        {% if h.type == 2 %}
+                            <span class="tb-lead">Вывод со счета</span>
+                        {% endif %}
+                        {% if h.type == 3 %}
+                            <span class="tb-lead">Покупка EMG</span>
+                        {% endif %}
+                    </div>
+                    <div class="nk-tb-col tb-col-sm">
+                        <span class="tb-sub">{{ h.date|date:"d.m.Y" }}</span>
+                    </div>
+                    <div class="nk-tb-col tb-col-xxl">
+                        <span class="tb-sub">{{ h.date|date:"H:i" }}</span>
+                    </div>
+                    <div class="nk-tb-col tb-col-sm text-right">
+                        {% if h.to_type == 1 %}
+                            <span class="tb-sub tb-amount">{{ h.to_new_balance.normalize }}<span> EMG ({{ h.to_new_balance_in_usd.normalize }} USD)</span></span>
+                        {% endif %}
+                    </div>
+                    <div class="nk-tb-col text-right">
+                        {% if h.to_type == 1 %}
+                            <span class="tb-sub tb-amount ">+ {{ h.to_amount.normalize }} <span>EMG ({{ h.to_amount_in_usd.normalize }} USD)</span></span>
+                        {% endif %}
+                    </div>
+                </div>
+                <!-- .nk-tb-item -->
+            {% endfor %}
+        </div>
+    </div><!-- .nk-block -->
+{% endblock %}
+{% block u_scripts %}
+{% endblock %}

@@ -1,0 +1,154 @@
+{% extends 'staff_panel/_blank.html' %}
+{% load static %}
+
+{% block content %}
+    {% csrf_token %}<div class="nk-block">
+    <div class="card card-bordered">
+        <div class="card-aside-wrap">
+            <div class="card-inner card-inner-lg">
+                <div class="nk-block-head nk-block-head-lg">
+                    <div class="nk-block-between">
+                        <div class="nk-block-head-content">
+                            <h4 class="nk-block-title">Финансовые настройки</h4>
+                            <div class="nk-block-des">
+                                <p>Финансовые настройки внутри системы</p>
+                            </div>
+                        </div>
+                    </div>
+                </div><!-- .nk-block-head -->
+                <div class="nk-block">
+                    <span class="preview-title-lg overline-title">Вывод средств</span>
+                    <form method="POST">{% csrf_token %}
+
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                {% if f_settings.is_enable_withdrawal == False %}
+                                    <div class="input-group-text" id="btnGroupAddon">Статус: Выключено</div>
+                                {% else %}
+                                    <div class="input-group-text" id="btnGroupAddon">Статус: Включено</div>
+                                {% endif %}
+                            </div>
+                            {% if f_settings.is_enable_withdrawal == False %}
+                                <div class="input-group-append">
+                                    <input type="hidden" name="withdrawal">
+                                    <button type="submit" class="btn btn-primary">Включить</button>
+                                </div>
+                            {% else %}
+                                <div class="input-group-append">
+                                    <input type="hidden" name="withdrawal">
+                                    <button type="submit" class="btn btn-primary">Выключить</button>
+                                </div>
+                            {% endif %}
+                        </div>
+                        <div class="form-group">
+                        </div>
+                    </form>
+                </div>
+                <hr class="preview-hr">
+                <div class="nk-block">
+                    <span class="preview-title-lg overline-title">ОСТАЛЬНОЕ</span>
+                                <form method="POST">{% csrf_token %}
+                                    <div class="form-group">
+                                        <div class="input-group">
+                                            <div class="input-group-prepend">
+                                                <div class="input-group-text" id="btnGroupAddon">1 EMG =</div>
+                                            </div>
+                                            <input type="text" class="form-control" placeholder="Сколько стоит 1 EMG" aria-label="" aria-describedby="btnGroupAddon" value="{{ f_settings.rateETGinUSD.normalize }}" name="etginusd">
+                                            <div class="input-group-append">
+                                                <div class="input-group-text" id="btnGroupAddon">USD</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="row">
+                                            <div class="col-xl-6 mt-3">
+                                                <div class="input-group">
+                                                    <div class="input-group-prepend">
+                                                        <div class="input-group-text" id="btnGroupAddon">Доступно EMG</div>
+                                                    </div>
+                                                    <input type="text" class="form-control" placeholder="" aria-label="Input group example" aria-describedby="btnGroupAddon" value="{{ f_settings.etgCount.normalize }}" name="etg-count" id="etg-count">
+                                                </div>
+                                            </div>
+                                            <div class="col-xl-3 mt-3">
+                                                <div class="input-group">
+                                                    <input type="text" class="form-control" placeholder="Введите кол-во" aria-label="10" aria-describedby="btnGroupAddon" id="plus-input">
+                                                    <div class="input-group-append plus-gr">
+                                                        <button type="button" class="btn btn-light plus-btn">Добавить</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-xl-3 mt-3">
+                                                <div class="input-group">
+                                                    <input type="text" class="form-control" placeholder="Введите кол-во" aria-label="10" aria-describedby="btnGroupAddon" id="minus-input">
+                                                    <div class="input-group-append minus-gr">
+                                                        <button type="button" class="btn btn-light minus-btn">Убрать</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <input type="hidden" name="savesettings">
+                                        <button type="submit" class="btn btn-primary">Сохранить</button>
+                                    </div>
+                                </form>
+                </div><!-- .nk-block -->
+            </div>
+        </div><!-- .card-aside-wrap -->
+    </div><!-- .card -->
+</div>
+{% endblock %}
+{% block scripts %}
+    <script>
+        'use strict';
+        $(document).ready(function () {
+            var etgCount = Number.parseInt(document.getElementById('etg-count').value);
+
+            {% if success == '1' %}
+                Swal.fire("Успешно", "Данные обновлены.", "success");
+            {% endif %}
+            {% if success == '2' %}
+                Swal.fire("Ошибка", '{{ error }}', "error");
+            {% endif %}
+
+            $('.plus-gr').on('click', '.plus-btn',function()
+            {
+                var text = document.getElementById('plus-input').value;
+
+                var is_num = true;
+                for (var i = 0;  i < text.length; i++) {
+                    if(!parseFloat(text[i], 10)){
+                        if(text[i] != "." && text[i] != "0"){
+                            is_num = false;
+                        }
+                    }
+                }
+                if(parseFloat(text, 10) && is_num == true){
+                    etgCount = Number.parseInt(document.getElementById('etg-count').value);
+                    etgCount = etgCount + Number.parseFloat(text, 10);
+                    document.getElementById('etg-count').value = etgCount;
+                }
+            });
+
+            $('.minus-gr').on('click', '.minus-btn',function()
+            {
+                var text = document.getElementById('minus-input').value;
+
+                var is_num = true;
+                for (var i = 0;  i < text.length; i++) {
+                    if(!parseFloat(text[i], 10)){
+                        if(text[i] != "." && text[i] != "0"){
+                            is_num = false;
+                        }
+                    }
+                }
+                if(parseFloat(text, 10) && is_num == true){
+                    etgCount = Number.parseInt(document.getElementById('etg-count').value);
+                    etgCount = etgCount - Number.parseFloat(text, 10);
+                    document.getElementById('etg-count').value = etgCount;
+                }
+            });
+
+            });
+    </script>
+{% endblock %}

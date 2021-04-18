@@ -1,0 +1,171 @@
+{% extends 'client_panel/_blank.html' %}
+{% load static %}
+
+{% block content %}
+    <div class="nk-block-head">
+        <div class="nk-block-head-content">
+            <div class="nk-block-head-sub"><span>Настройки</span></div>
+            <h2 class="nk-block-title fw-normal">Партнерская программа</h2>
+            <div class="nk-block-des">
+                <p>Вы можете изменить свои основные данные <span class="text-primary"></span></p>
+            </div>
+        </div>
+    </div><!-- .nk-block-head -->
+    {% if not user.is_email_verified %}
+        <div class="alert alert-fill alert-warning alert-icon email-notification">
+            <em class="icon ni ni-alert-circle"></em><strong>Необходимо подтвердить электронную почту!</strong>
+            <br>Если вам не пришло письмо, мы можем отправить его еще раз.
+            <br><br><button class="btn btn-sm btn-light verifyemail" id="verifyemail">Отправить ссылку еще раз</button>
+        </div>
+    {% endif %}
+    <ul class="nk-nav nav nav-tabs">
+        <li class="nav-item">
+            <a class="nav-link" href="{% url 'client_settings' %}">Основное</a>
+        </li>
+        <li class="nav-item active current-page">
+            <a class="nav-link" href="{% url 'client_settings_partners' %}">Партнерская программа</a>
+        </li>
+    </ul><!-- .nk-menu -->
+    <!-- NK-Block @s -->
+    <div class="nk-block">
+        <div class="nk-data data-list">
+            {% if user.role == 2 %}
+            <div class="data-item" data-toggle="modal" data-target="#profile-edit">
+                <div class="data-col">
+                    <span class="data-label">Реферальная ссылка</span>
+                    <span class="data-value" id="slug-text">{{ request.get_host }}/r/{{ user.referal_card.referal_code|lower }}</span>
+                </div>
+                <div class="data-col data-col-end"><span class="data-more"><em class="icon ni ni-forward-ios"></em></span></div>
+            </div><!-- .data-item -->
+            {% else %}
+                <div class="data-item">
+                    <div class="data-col">
+                        <span class="data-label">Реферальная ссылка</span>
+                        <span class="data-value">{{ request.get_host }}/r/{{ user.referal_card.referal_code|lower }}</span>
+                    </div>
+                    <div class="data-col data-col-end"><span class="data-more disable"><em class="icon ni ni-lock-alt"></em></span></div>
+                </div><!-- .data-item -->
+            {% endif %}
+        </div><!-- .nk-data -->
+    </div>
+    <!-- app-root @e -->
+    <!-- @@ Profile Edit Modal @e -->
+    <div class="modal fade" tabindex="-1" role="dialog" id="profile-edit">
+        <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+            <div class="modal-content">
+                <a href="#" class="close" data-dismiss="modal"><em class="icon ni ni-cross-sm"></em></a>
+                <div class="modal-body modal-body-lg">
+                    <h5 class="title">Изменить</h5>
+                    <ul class="nk-nav nav nav-tabs">
+                        <li class="nav-item">
+                            <a class="nav-link active" data-toggle="tab" href="#personal">Партнерская программа</a>
+                        </li>
+                    </ul><!-- .nav-tabs -->
+                    <div class="tab-content">
+                        <div class="tab-pane active" id="personal">
+                            <div class="row gy-4 personal-form">
+                                {% csrf_token %}
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label class="form-label" for="edit-name">Личный код</label>
+                                        <input type="text" class="form-control form-control-lg" id="edit-slug" name="edit-slug" value="{{ user.referal_card.referal_code|lower }}" placeholder="Ваша личная ссылка">
+                                    </div>
+                                </div>
+                                <div class="col-12">
+                                    <ul class="align-center flex-wrap flex-sm-nowrap gx-4 gy-2">
+                                        <li>
+                                            <input type="hidden" name="editslug" value="">
+                                            <button type="button" class="btn btn-lg btn-primary edit-personal">Изменить</button>
+                                        </li>
+                                        <li>
+                                            <a href="#" data-dismiss="modal" class="link link-light" id="closemodalname">Отмена</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div><!-- .tab-pane -->
+                    </div><!-- .tab-content -->
+                </div><!-- .modal-body -->
+            </div><!-- .modal-content -->
+        </div><!-- .modal-dialog -->
+    </div><!-- .modal -->
+{% endblock %}
+{% block scripts %}
+    <script src="{% static 'user_panel/assets/js/charts/chart-crypto.js' %}?ver=2.2.0"></script>
+    <script>
+        'use strict';
+        $(document).ready(function () {
+
+            {% if not user.is_email_verified %}
+            $('.email-notification').on('click', '.verifyemail',function()
+            {
+                const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+
+                var ready = true
+                if(ready){
+                    $.ajax
+                    ({
+                        data:
+                            {
+                                csrfmiddlewaretoken: csrftoken,
+                                action: 'verify-email'
+                            }, // get the form data
+                        type: "POST", // GET or POST
+                        url: "{% url 'client_settings' %}",
+                        // on success
+                        success: function (response)
+                        {
+                            Swal.fire("Успешно!", "Письмо было отправлено вам на почту. След. исьмо можно будет отравить через 10 минут.", "success");
+                        },
+                        // on error
+                        error: function (response)
+                        {
+                            Swal.fire("Ошибка", response.responseJSON.errors, "error");
+                        }
+                    });
+                }
+            });
+            {% endif %}
+
+
+            $('.personal-form').on('click', '.edit-personal',function()
+            {
+                const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+                var elSlug = document.getElementById('edit-slug');
+                var slug = elSlug.value.trim().toLowerCase();
+
+                var ready = true
+                if(ready){
+                    $.ajax
+                    ({
+                        data:
+                            {
+                                csrfmiddlewaretoken: csrftoken,
+                                slug: slug,
+                                action: 'edit-slug'
+                            }, // get the form data
+                        type: "POST", // GET or POST
+                        url: "{% url 'client_settings_partners' %}",
+                        // on success
+                        success: function (response)
+                        {
+                            document.getElementById('slug-text').innerHTML = '{{ request.get_host }}/r/' + slug;
+                            document.getElementById("closemodalname").click();
+                            Swal.fire("Успешно!", "Данные были изменены.", "success");
+                        },
+                        // on error
+                        error: function (response)
+                        {
+                            Swal.fire("Ошибка", response.responseJSON.errors, "error");
+                        }
+                    });
+                }
+            });
+
+
+
+
+
+        });
+    </script>
+{% endblock %}

@@ -1,0 +1,71 @@
+{% extends 'client_panel/_blank.html' %}
+{% load static %}
+{% block content %}
+
+    <div class="nk-block-head nk-block-head-sm">
+        <div class="nk-block-between">
+            <div class="nk-block-head-content">
+                <h3 class="nk-block-title page-title">Ставка</h3>
+                <div class="nk-block-des text-soft">
+                    <p>Система ставок</p>
+                </div>
+            </div><!-- .nk-block-head-content -->
+        </div><!-- .nk-block-between -->
+    </div><!-- .nk-block-head -->
+    <div class="nk-block">
+        <div class="card card-bordered">
+            <div class="card-inner card-inner-xl">
+                <div class="entry">
+                    <h4>Информация</h4>
+                    <br>
+                    <h5>EMG Награда: 1% / День</h5>
+                    <h5>Всего получено: {{ user.balance_etggold.staking_full_amount.normalize }} EMG+</h5>
+                    <p>Каждый день в 00:00 по МСК на ваш счет EMG+ будет начисляться <strong>1%</strong> от вашего баланса.</р>
+                </div>
+            </div><!-- .card-inner -->
+        </div><!-- .card -->
+    </div>
+    <div class="nk-block nk-block-lg">
+        <div class="row gy-gs">
+            <div class="col-md-12">
+                <div class="card-head">
+                    <div class="card-title  mb-0">
+                        <h5 class="title">Последние EMG+ награды</h5>
+                    </div>
+                </div><!-- .card-head -->
+                <div class="tranx-list card card-bordered">
+                    {% if etggold_history.count <= 0 %}
+                        <div class="tranx-item">
+                            <div class="tranx-col">
+                                <div class="tranx-info">
+                                    <div class="tranx-data">
+                                        <div class="tranx-label">У вас пока нет EMG+ наград.</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div><!-- .tranx-item -->
+                    {% else %}
+                    {% for n in etggold_history %}
+                        <div class="tranx-item">
+                            <div class="tranx-col">
+                                <div class="tranx-info">
+                                    <div class="tranx-data">
+                                        <div class="tranx-label">{{ n.date|date:"d.m.Y" }}</div>
+                                        <div class="tranx-date">Баланс до начисления: {{ n.balance_before.normalize }} EMG</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="tranx-col">
+                                <div class="tranx-amount">
+                                    <div class="number">{{ n.staking_amount.normalize }} <span class="currency currency-btc">ETG+</span></div>
+                                    <div class="number-sm">Новый баланс: {{ n.balance_new.normalize }} <span class="currency currency-usd">ETG+</span></div>
+                                </div>
+                            </div>
+                        </div><!-- .tranx-item -->
+                    {% endfor %}
+                    {% endif %}
+                </div><!-- .tranx-list -->
+            </div><!-- .col -->
+        </div><!-- .row -->
+    </div>
+{% endblock %}

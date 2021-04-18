@@ -1,0 +1,227 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="zxx" class="js">
+
+<head>
+    <base href="../../../">
+    <meta charset="utf-8">
+    <meta name="author" content="Softnio">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="A powerful and conceptual apps base dashboard template that especially build for developers and programmers.">
+    <!-- Fav Icon  -->
+    <link rel="shortcut icon" href="./images/favicon.png">
+    <!-- Page Title  -->
+    <title>регистрация</title>
+    <!-- StyleSheets  -->
+    <link rel="stylesheet" href="{% static 'user_panel/assets/css/dashlite.css' %}?ver=2.2.0">
+    <link id="skin-default" rel="stylesheet" href="./assets/css/theme.css?ver=2.2.0">
+</head>
+<div id="spdiv">
+</div>
+<body class="nk-body bg-white npc-general pg-auth">
+
+
+<div class="nk-app-root">
+    <!-- main @s -->
+    <div class="nk-main ">
+        <!-- wrap @s -->
+        <div class="nk-wrap nk-wrap-nosidebar">
+            <!-- content @s -->
+            <div class="nk-content ">
+                <div class="nk-block nk-block-middle nk-auth-body wide-xs">
+                    <div class="brand-logo pb-4 text-center">
+                        <a href="html/index.html" class="logo-link">
+                            <img class="logo-light logo-img logo-img-lg" src="./images/logo.png" srcset="./images/logo2x.png 2x" alt="logo">
+                            <img class="logo-dark logo-img logo-img-lg" src="./images/logo-dark.png" srcset="./images/logo-dark2x.png 2x" alt="logo-dark">
+                        </a>
+                    </div>
+                    <div class="card card-bordered">
+                        <div class="card-inner card-inner-lg">
+                            <div class="nk-block-head">
+                                <div class="nk-block-head-content">
+                                    <h4 class="nk-block-title">Регистрация</h4>
+                                    <div class="nk-block-des">
+                                        <p>Добро пожаловать!</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <form class="register-steps" id="regform">
+                                {% csrf_token %}
+                                <div class="form-group">
+                                    <label class="form-label" for="name">Номер телефона (+7)</label>
+                                    <input type="text" class="form-control form-control-lg" id="phone-number" name="phone-number" placeholder="Введите номер телефона" value="">
+                                </div>
+                                <div class="form-group">
+                                    <button type="button" class="btn btn-lg btn-primary btn-block continue-button" id="continue-button">Далее</button>
+                                </div>
+                            </form>
+                            <div class="form-note-s2 text-center pt-4">Уже есть аккаунт? <a href="{% url 'client_signin' %}"><strong>Войти</strong></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="nk-footer nk-auth-footer-full">
+                    <div class="container wide-lg">
+                        <div class="row g-3">
+                            <div class="col-lg-6 order-lg-last">
+                                <ul class="nav nav-sm justify-content-center justify-content-lg-end">
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="#">Правила</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="#">Faq</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="#">Помощь</a>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="nk-block-content text-center text-lg-left">
+                                    <p class="text-soft">&copy; 2021 EMG. Все права защищены.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- wrap @e -->
+        </div>
+        <!-- content @e -->
+    </div>
+    <!-- main @e -->
+</div>
+<!-- app-root @e -->
+<!-- JavaScript -->
+<script src="{% static 'user_panel/assets/js/bundle.js' %}?ver=2.2.0"></script>
+<script src="{% static 'user_panel/assets/js/scripts.js' %}?ver=2.2.0"></script>
+<script>
+    'use strict';
+    $(document).ready(function () {
+        var spinner = (
+            ' <div class="d-flex justify-content-center" style="width:100%;height:100%;position:fixed;z-index:9999; background: white; ">' +
+            '<div class="spinner-border text-primary" role="status" style="margin-top: 45vh;">' +
+            '<span class="sr-only">Загрузка...</span>' +
+            '</div>' +
+            '</div>');
+        var elSpinner = document.getElementById('spdiv');
+
+
+        var ph;
+        var readycode = (
+            '<div class="form-group">' +
+            '<label class="form-label" for="">Код из смс</label>' +
+            '<input type="text" class="form-control form-control-lg" id="sms-number" name="sms-number"  placeholder="" value="">' +
+            '</div>' +
+            '<div class="form-group">' +
+            '<label class="form-label" for="">Email</label>' +
+            '<input type="text" class="form-control form-control-lg" id="email" name="email" placeholder="" value="">' +
+            '</div>' +
+            '<div class="form-group">' +
+            '<label class="form-label" for="">Имя</label>' +
+            '<input type="text" class="form-control form-control-lg" id="name" name="name" placeholder="" value="">' +
+            '</div>' +
+            '<div class="form-group">' +
+            '<label class="form-label" for="">Фамилия</label>' +
+            '<input type="text" class="form-control form-control-lg" id="surname" name="surname" placeholder="" value="">' +
+            '</div>' +
+            '<div class="form-group">' +
+            '<label class="form-label" for="">Пароль</label>' +
+            '<input type="password" class="form-control form-control-lg" id="password" name="password" placeholder="" value="">' +
+            '</div>' +
+            '<div class="form-group">' +
+            '<label class="form-label" for="">Подтверждение пароля</label>' +
+            '<input type="password" class="form-control form-control-lg" id="rpassword" name="rpassword" placeholder="" value="">' +
+            '</div>' +
+            '<div class="form-group">' +
+            '<button type="button" class="btn btn-lg btn-primary btn-block ready-button" id="ready-button">Готово</button>' +
+            '</div>');
+
+        $('.register-steps').on('click', '.continue-button',function()
+        {
+            elSpinner.innerHTML = spinner;
+            const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+            var elPhone = document.getElementById('phone-number');
+            ph = elPhone.value.trim();
+            var ready = true
+            if(ready){
+                $.ajax
+                ({
+                    data:
+                        {
+                            csrfmiddlewaretoken: csrftoken,
+                            phone: ph,
+                            action: 'step-1'
+                        }, // get the form data
+                    type: "POST", // GET or POST
+                    url: "{% url 'client_signup' %}",
+                    // on success
+                    success: function (response)
+                    {
+                        elPhone.disabled = 1;
+                        document.getElementById('continue-button').remove();
+                        $('#regform').append(readycode);
+                        elSpinner.innerHTML = "";
+                    },
+                    // on error
+                    error: function (response)
+                    {
+                        Swal.fire("Ошибка", response.responseJSON.errors, "error");
+                        elSpinner.innerHTML = "";
+                    }
+                });
+            }
+        });
+
+        $('.register-steps').on('click', '.ready-button',function()
+        {
+            elSpinner.innerHTML = spinner;
+            const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+            var elPhoneCode = document.getElementById('sms-number');
+            var elEmail = document.getElementById('email');
+            var elName = document.getElementById('name');
+            var elSurname = document.getElementById('surname');
+            var elPassword = document.getElementById('password');
+            var elRPassword = document.getElementById('rpassword');
+            var phonecode = elPhoneCode.value.trim();
+            var email = elEmail.value.trim();
+            var name = elName.value.trim();
+            var surname = elSurname.value.trim();
+            var pass = elPassword.value.trim();
+            var rpass = elRPassword.value.trim();
+
+            var ready = true
+            if(ready){
+                $.ajax
+                ({
+                    data:
+                        {
+                            csrfmiddlewaretoken: csrftoken,
+                            phone: ph,
+                            phonecode: phonecode,
+                            email: email,
+                            name: name,
+                            surname: surname,
+                            pass: pass,
+                            rpass: rpass,
+                            action: 'step-2'
+                        }, // get the form data
+                    type: "POST", // GET or POST
+                    url: "{% url 'client_signup' %}",
+                    // on success
+                    success: function (response)
+                    {
+                        window.location.replace("{% url 'client_settings' %}");
+                    },
+                    // on error
+                    error: function (response)
+                    {
+                        Swal.fire("Ошибка", response.responseJSON.errors, "error");
+                        elSpinner.innerHTML = "";
+                    }
+                });
+            }
+        });
+    });
+</script>
+</html>

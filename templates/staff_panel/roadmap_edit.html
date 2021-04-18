@@ -1,0 +1,135 @@
+{% extends 'staff_panel/_blank.html' %}
+{% load static %}
+
+{% block content %}
+    <div class="nk-content-body">
+        <div class="nk-block-head nk-block-head-sm">
+            <div class="nk-block-between">
+                <div class="nk-block-head-content">
+                    <h3 class="nk-block-title page-title">Дорожная карта</h3>
+                    <div class="nk-block-des text-soft">
+                        <p>Список всех ответов</p>
+                    </div>
+                </div><!-- .nk-block-head-content -->
+                <div class="nk-block-head-content">
+                    <div class="toggle-wrap nk-block-tools-toggle">
+                        <a href="#" class="btn btn-icon btn-trigger toggle-expand mr-n1" data-target="pageMenu"><em class="icon ni ni-menu-alt-r"></em></a>
+                        <div class="toggle-expand-content" data-content="pageMenu">
+                            {% csrf_token %}
+                            <ul class="nk-block-tools g-3 ">
+                                <li class="nk-block-tools-opt btns-d"><button class="btn btn-primary btn-save"><em class="icon ni ni-save"></em><span>Сохранить</span></button></li>
+                                <li class="nk-block-tools-opt"><button class="btn btn-danger"  data-toggle="modal" data-target="#modalAlert1"><em class="icon ni ni-delete-fill"></em><span>Удалить</span></button></li>
+                                <li class="nk-block-tools-opt"><a href="{% url 'staff_roadmap' %}" class="btn btn-light"><em class="icon ni ni-back-alt"></em><span>Назад</span></a></li>
+                            </ul>
+                        </div>
+                    </div><!-- .toggle-wrap -->
+                </div><!-- .nk-block-head-content -->
+            </div><!-- .nk-block-between -->
+        </div><!-- .nk-block-head -->
+        <div class="form-group">
+            <label class="form-label">Название</label>
+            <div class="input-group">
+                <input type="text" class="form-control" placeholder="Введите название" aria-label="" aria-describedby="btnGroupAddon" value="{{ map.title }}" name="etginusd" id="roadmaptitle">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="form-label">Год</label>
+            <div class="form-control-wrap">
+                <div class="form-icon form-icon-right">
+                    <em class="icon ni ni-calendar-alt"></em>
+                </div>
+                <input type="text" class="form-control date-picker" id="pdate" value="{{ map.date|date:"m/d/Y" }}">
+            </div>
+            <div class="form-note">Формат: Месяц/День/Год</div>
+        </div>
+
+        <div class="modal fade" tabindex="-1" id="modalAlert1" style="display: none;" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-body modal-body-lg text-center">
+                        <div class="nk-modal">
+                            <em class="nk-modal-icon icon icon-circle icon-circle-xxl ni ni-delete bg-danger"></em>
+                            <h4 class="nk-modal-title">Удалить Точку?</h4>
+                            <div class="nk-modal-text">
+                                <p class="lead">Вы уверенны что хотите удалить данную точку?</p>
+                            </div>
+                            <div class="nk-modal-action mt-5 deleteroadmap-gr">
+                                <button class="btn btn-lg btn-mw btn-danger deleteroadmap-btn" data-dismiss="modal">Удалить</button>
+                                <button class="btn btn-lg btn-mw btn-light" data-dismiss="modal">Назад</button>
+                            </div>
+                        </div>
+                    </div><!-- .modal-body -->
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block scripts %}
+    <script>
+        'use strict';
+        $(document).ready(function () {
+
+            $('.btns-d').on('click', '.btn-save',function()
+            {
+                const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+                var title = document.getElementById('roadmaptitle').value
+                var date = document.getElementById('pdate').value
+                var ready = true;
+                if(ready){
+                    $.ajax
+                    ({
+                        data:
+                            {
+                                csrfmiddlewaretoken: csrftoken,
+                                title: title,
+                                date: date,
+                                action: 'save',
+
+                            }, // get the form data
+                        type: "POST", // GET or POST
+                        url: "{% url 'staff_roadmap_edit' map.pk %}",
+                        // on success
+                        success: function (response)
+                        {
+                            Swal.fire("Успешно", 'Точка сохранена', "success");
+                        },
+                        // on error
+                        error: function (response)
+                        {
+                            Swal.fire("Ошибка", response.errors, "error");
+                        }
+                    });
+                }
+            });
+
+            $('.deleteroadmap-gr').on('click', '.deleteroadmap-btn',function()
+            {
+                const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+                var ready = true;
+                if(ready){
+                    $.ajax
+                    ({
+                        data:
+                            {
+                                csrfmiddlewaretoken: csrftoken,
+                                action: 'delete',
+
+                            }, // get the form data
+                        type: "POST", // GET or POST
+                        url: "{% url 'staff_roadmap_edit' map.pk %}",
+                        // on success
+                        success: function (response)
+                        {
+                            window.location.replace('{{ request.build_absolute_uri }}');
+                        },
+                        // on error
+                        error: function (response)
+                        {
+                            Swal.fire("Ошибка", response.responseJSON.errors, "error");
+                        }
+                    });
+                }
+            });
+        });
+    </script>
+{% endblock %}

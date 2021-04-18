@@ -1,0 +1,810 @@
+{% extends 'staff_panel/_blank.html' %}
+{% load static %}
+
+{% block content %}
+    {% csrf_token %}
+    <div class="nk-block-head nk-block-head-sm">
+        <div class="nk-block-between">
+            <div class="nk-block-head-content">
+                <h3 class="nk-block-title page-title">Пользователи</h3>
+                <div class="nk-block-des text-soft">
+                    <p>Всего пользователей: {{ users_count }}</p>
+                </div>
+            </div><!-- .nk-block-head-content -->
+        </div><!-- .nk-block-between -->
+    </div><!-- .nk-block-head -->
+    <div class="nk-block">
+        <div class="card card-bordered card-stretch">
+            <div class="card-inner-group">
+                <div class="card-inner position-relative card-tools-toggle">
+                    <div class="card-title-group">
+                        <div class="card-tools">
+                            <div class="form-inline flex-nowrap gx-3">
+                            </div><!-- .form-inline -->
+                        </div><!-- .card-tools -->
+                        <div class="card-tools mr-n1">
+                            <ul class="btn-toolbar gx-1">
+                                <li>
+                                    <button class="btn btn-icon search-toggle toggle-search" data-target="search"><em class="icon ni ni-search"></em></button>
+                                    <a href="{{ request.build_absolute_uri }}" class="btn btn-icon"><em class="icon ni ni-cross-c"></em></a>
+                                </li><!-- li -->
+                                <li class="btn-toolbar-sep"></li><!-- li -->
+                                <li>
+                                    <div class="toggle-wrap">
+                                        <a href="#" class="btn btn-icon btn-trigger toggle" data-target="cardTools"><em class="icon ni ni-menu-right"></em></a>
+                                        <div class="toggle-content" data-content="cardTools">
+                                            <ul class="btn-toolbar gx-1">
+                                                <li class="toggle-close">
+                                                    <a href="#" class="btn btn-icon btn-trigger toggle" data-target="cardTools"><em class="icon ni ni-arrow-left"></em></a>
+                                                </li><!-- li -->
+                                                <li>
+                                                    <div class="dropdown">
+                                                        <button type="button" class="btn btn-trigger btn-icon dropdown-toggle" data-toggle="dropdown">
+                                                            <div class="dot dot-primary"></div>
+                                                            <em class="icon ni ni-filter-alt"></em>
+                                                        </button>
+                                                        <div class="filter-wg dropdown-menu dropdown-menu-xl dropdown-menu-right">
+                                                            <div class="dropdown-head">
+                                                                <span class="sub-title dropdown-title">Фильтр</span>
+                                                                <div class="dropdown">
+                                                                    <a href="#" class="btn btn-sm btn-icon">
+                                                                        <em class="icon ni ni-more-h"></em>
+                                                                    </a>
+                                                                </div>
+                                                            </div>
+                                                            <div class="dropdown-body dropdown-body-rg">
+                                                                <div class="row gx-6 gy-3">
+                                                                    <div class="col-6">
+                                                                        <div class="form-group">
+                                                                            <label class="overline-title overline-title-alt">Тип</label>
+                                                                            <select class="form-select form-select-sm" id="typeSelect">
+                                                                                <option {% if type == '' %}selected{% endif %} value="any">Любой</option>
+                                                                                <option {% if type == 'standart' %}selected{% endif %} value="standart">Стандарт</option>
+                                                                                <option {% if type == 'blogger' %}selected{% endif %} value="blogger">Блогер</option>
+                                                                                <option {% if type == 'staff' %}selected{% endif %} value="staff">Администратор</option>
+                                                                            </select>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-6">
+                                                                        <div class="form-group">
+                                                                            <label class="overline-title overline-title-alt">Статус</label>
+                                                                            <select class="form-select form-select-sm" id="statusSelect">
+                                                                                <option {% if status == '' %}selected{% endif %} value="any">Любой</option>
+                                                                                <option {% if status == 'active' %}selected{% endif %} value="active">Активный</option>
+                                                                                <option {% if status == 'blocked' %}selected{% endif %} value="blocked">Заблокирован</option>
+                                                                            </select>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-12">
+                                                                        <div class="form-group filter-gr">
+                                                                            <button type="button" class="btn btn-secondary show-filter">Показать</button>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="dropdown-foot between">
+                                                                <a class="clickable" href="{% url 'staff_users' %}">Сброс</a>
+                                                            </div>
+                                                        </div><!-- .filter-wg -->
+                                                    </div><!-- .dropdown -->
+                                                </li><!-- li -->
+                                                <li>
+                                                    <div class="dropdown">
+                                                        <a href="#" class="btn btn-trigger btn-icon dropdown-toggle" data-toggle="dropdown">
+                                                            <em class="icon ni ni-setting"></em>
+                                                        </a>
+                                                        <div class="dropdown-menu dropdown-menu-xs dropdown-menu-right">
+                                                            <ul class="link-check show-set">
+                                                                <li><span>Страниц</span></li>
+                                                                <li {% if show == 10 %}class="active"{% endif %}><a href="" id="show10">10</a></li>
+                                                                <li {% if show == 20 %}class="active"{% endif %}><a href="" id="show20">20</a></li>
+                                                                <li {% if show == 50 %}class="active"{% endif %}><a href="" id="show50">50</a></li>
+                                                                <li {% if show == 100 %}class="active"{% endif %}><a href="" id="show100">100</a></li>
+                                                            </ul>
+                                                            <ul class="link-check">
+                                                                <li><span>Сотрировка</span></li>
+                                                                <li><a {% if sort == 'etgdown' %}class="active"{% endif %} href="" id="etg_down">EMG ↓</a></li>
+                                                                <li><a {% if sort == 'etgup' %}class="active"{% endif %} href="" id="etg_up">EMG ↑</a></li>
+                                                                <li><a {% if sort == 'usddown' %}class="active"{% endif %} href="" id="usd_down">USD ↓</a></li>
+                                                                <li><a {% if sort == 'usdup' %}class="active"{% endif %} href="" id="usd_up">USD ↑</a></li>
+                                                            </ul>
+                                                        </div>
+                                                    </div><!-- .dropdown -->
+                                                </li><!-- li -->
+                                            </ul><!-- .btn-toolbar -->
+                                        </div><!-- .toggle-content -->
+                                    </div><!-- .toggle-wrap -->
+                                </li><!-- li -->
+                            </ul><!-- .btn-toolbar -->
+                        </div><!-- .card-tools -->
+                    </div><!-- .card-title-group -->
+                    <div class="card-search search-wrap" data-search="search">
+                        <div class="card-body">
+                            <div class="search-content">
+                                <form method="POST">{% csrf_token %}
+                                    <a href="{% url 'staff_users' %}{{ params }}{{ current_page }}" class="search-back btn btn-icon toggle-search" data-target="search"><em class="icon ni ni-arrow-left"></em></a>
+                                </form>
+                                <form method="POST">{% csrf_token %}
+                                    <input type="text" class="form-control border-transparent form-focus-none search-input" name="text" id="search-input" placeholder="Поиск по ФИО или Email">
+                                    <button type="submit" class="search-submit btn btn-icon"><em class="icon ni ni-search"></em></button>
+                                </form>
+                            </div>
+                        </div>
+                    </div><!-- .card-search -->
+                </div><!-- .card-inner -->
+                <div class="card-inner p-0">
+                    <div class="nk-tb-list nk-tb-ulist">
+                        <div class="nk-tb-item nk-tb-head">
+                            <div class="nk-tb-col"><span class="sub-text">Пользователь</span></div>
+                            <div class="nk-tb-col tb-col-mb"><span class="sub-text">EMG</span></div>
+                            <div class="nk-tb-col tb-col-mb"><span class="sub-text">USD</span></div>
+                            <div class="nk-tb-col tb-col-md"><span class="sub-text">Телефон</span></div>
+                            <div class="nk-tb-col tb-col-lg"><span class="sub-text">Подтверждение</span></div>
+                            <div class="nk-tb-col tb-col-lg"><span class="sub-text">Последний вход</span></div>
+                            <div class="nk-tb-col tb-col-md"><span class="sub-text">Статус</span></div>
+                        </div><!-- .nk-tb-item -->
+                        {% for usr in users %}
+                        <div class="nk-tb-item">
+                            <div class="nk-tb-col">
+                                <a href="{% url 'staff_user_view' usr.pk %}">
+                                    <div class="user-card">
+                                        <div class="user-avatar {% if usr.is_staff %}bg-danger{% else %}{% if usr.role == 2 %}bg-primary{% else %}bg-light{% endif %}{% endif %}">
+                                            <span>{{ usr.surname|title|first }}{{ usr.name|title|first }}</span>
+                                        </div>
+                                        <div class="user-info">
+                                            <span class="tb-lead">{{ usr.surname|title }} {{ usr.name|title }} {{ usr.patronymic|title }}<span class="dot {% if usr.is_active %}dot-success{% endif %}{% if usr.is_banned %}dot-danger{% endif %} d-md-none ml-1"></span></span>
+                                            <span>{{ usr.email }}</span>
+                                        </div>
+                                    </div>
+                                </a>
+                            </div>
+                            <div class="nk-tb-col tb-col-mb">
+                                <span class="tb-amount">{{ usr.balance_etg.balance.normalize|floatformat  }}<span class="currency"></span></span>
+                            </div>
+                            <div class="nk-tb-col tb-col-mb">
+                                <span class="tb-amount">{{ usr.balance_usd.balance.normalize|floatformat  }}<span class="currency"></span></span>
+                            </div>
+                            <div class="nk-tb-col tb-col-md">
+                                <span>{{ usr.phone_number.number }}</span>
+                            </div>
+                            <div class="nk-tb-col tb-col-lg">
+                                <ul class="list-status">
+                                    {% if usr.is_email_verified %}
+                                        <li><em class="icon text-success ni ni-check-circle"></em> <span>Почта</span></li>
+                                    {% else %}
+                                        <li><em class="icon text-warning ni ni-alert-circle"></em> <span>Почта</span></li>
+                                    {% endif %}
+                                </ul>
+                            </div>
+                            <div class="nk-tb-col tb-col-lg">
+                                <span>{{ usr.last_login|date:"d.m.Y" }}</span>
+                            </div>
+                            <div class="nk-tb-col tb-col-md">
+                                {% if usr.is_active %}
+                                <span class="tb-status text-success">Активный</span>
+                                {% endif %}
+                                {% if usr.is_banned %}
+                                    <span class="tb-status text-danger">Заблокирован</span>
+                                {% endif %}
+                            </div>
+                        </div><!-- .nk-tb-item -->
+                        {% endfor %}
+                    </div><!-- .nk-tb-list -->
+                </div><!-- .card-inner -->
+                <div class="card-inner">
+                    <div class="nk-block-between-md g-3">
+                        <div class="g">
+                            <ul class="pagination justify-content-center justify-content-md-start">
+                                {% if page_count <= 7 %}
+                                    {% if current_page > 1 %}
+                                        <li class="page-item"><a class="page-link" href="{% url 'staff_users' %}{{ params }}{{ prev_page }}">Назад</a></li>
+                                    {% endif %}
+                                    {% if current_page == 1 %}
+                                        <li class="page-item disabled"><a class="page-link">Назад</a></li>
+                                    {% endif %}
+
+                                    {% for page in pages %}
+                                        <li class="page-item {% if current_page == page %}active{% endif %}"><a class="page-link" href="{% url 'staff_users' %}{{ params }}{{ page }}">{{ page }}</a></li>
+                                    {% endfor %}
+
+                                    {% if current_page < page_count %}
+                                        <li class="page-item"><a class="page-link" href="{% url 'staff_users' %}{{ params }}{{ next_page }}">Далее</a></li>
+                                    {% endif %}
+                                    {% if current_page == page_count %}
+                                        <li class="page-item disabled"><a class="page-link">Далее</a></li>
+                                    {% endif %}
+                                {% endif %}
+
+                                {% if page_count > 7 %}
+
+                                    {% if current_page > 3 %}
+                                        <li class="page-item"><a class="page-link" href="{% url 'staff_users' %}{{ params }}{{ prev_page }}">Назад</a></li>
+                                        <li class="page-item"><a class="page-link" href="{% url 'staff_users' %}{{ params }}1">1</a></li>
+                                        <li class="page-item"><span class="page-link"><em class="icon ni ni-more-h"></em></span></li>
+                                    {% endif %}
+
+                                    {% if current_page > 1 and current_page < 4 %}
+                                        <li class="page-item"><a class="page-link" href="{% url 'staff_users' %}{{ params }}{{ prev_page }}">Назад</a></li>
+                                    {% endif %}
+
+                                    {% if current_page == 1 %}
+                                        <li class="page-item disabled"><a class="page-link">Назад</a></li>
+                                    {% endif %}
+
+                                    {% for page in center_pages %}
+                                        <li class="page-item {% if current_page == page %}active{% endif %}"><a class="page-link" href="{% url 'staff_users' %}{{ params }}{{ page }}">{{ page }}</a></li>
+                                    {% endfor %}
+
+                                    {% if current_page < pp %}
+                                        <li class="page-item"><span class="page-link"><em class="icon ni ni-more-h"></em></span></li>
+                                        <li class="page-item"><a class="page-link" href="{% url 'staff_users' %}{{ params }}{{ page_count }}">{{ page_count }}</a></li>
+                                        <li class="page-item"><a class="page-link" href="{% url 'staff_users' %}{{ params }}{{ next_page }}">Далее</a></li>
+                                    {% endif %}
+
+                                    {% if current_page >= pp and current_page < page_count %}
+                                        <li class="page-item"><a class="page-link" href="{% url 'staff_users' %}{{ params }}{{ next_page }}">Далее</a></li>
+                                    {% endif %}
+
+                                    {% if current_page == page_count %}
+                                        <li class="page-item disabled"><a class="page-link">Далее</a></li>
+                                    {% endif %}
+                                {% endif %}
+                            </ul><!-- .pagination -->
+                        </div>
+                    </div><!-- .nk-block-between -->
+                </div><!-- .card-inner -->
+            </div><!-- .card-inner-group -->
+        </div><!-- .card -->
+    </div><!-- .nk-block -->
+{% endblock %}
+{% block scripts %}
+    <script>
+        'use strict';
+        $(document).ready(function () {
+
+            var type = '{{ type }}';
+            var status = '{{ status }}';
+            var show = '{{ show }}';
+            var sort = '{{ sort }}';
+            var show10 = '10';
+            var show20 = '20';
+            var show50 = '50';
+            var show100 = '100';
+
+            var sortetgup = 'etgup';
+            var sortetgdown = 'etgdown';
+            var sortusdup = 'usdup';
+            var sortusddown = 'usddown';
+
+            var page = '{{ page }}';
+
+
+
+            var params = '';
+            var numb = 0;
+            if(type != '' && type != 'any'){
+                params += '?type=' + type;
+                numb += 1;
+            }
+            if(status != '' && status != 'any'){
+                if(numb > 0){
+                    params += '&status=' + status;
+                }
+                else{
+                    params += '?status=' + status;
+                }
+                numb += 1;
+            }
+            if(show10 != '' && show10 != 'any'){
+                if(numb > 0){
+                    params += '&show=' + show10;
+                }
+                else{
+                    params += '?show=' + show10;
+                }
+                numb += 1;
+            }
+            if(sort != '' && sort != 'any'){
+                if(numb > 0){
+                    params += '&sort=' + sort;
+                }
+                else{
+                    params += '?sort=' + sort;
+                }
+                numb += 1;
+            }
+            if(page != '' && page != 'any'){
+                if(numb > 0){
+                    params += '&page=' + page;
+                }
+                else{
+                    params += '?page=' + page;
+                }
+                numb += 1;
+            }
+            var url_show10 = '{% url 'staff_users' %}' + params
+
+            params = '';
+            numb = 0;
+            if(type != '' && type != 'any'){
+                params += '?type=' + type;
+                numb += 1;
+            }
+            if(status != '' && status != 'any'){
+                if(numb > 0){
+                    params += '&status=' + status;
+                }
+                else{
+                    params += '?status=' + status;
+                }
+                numb += 1;
+            }
+            if(show20 != '' && show20 != 'any'){
+                if(numb > 0){
+                    params += '&show=' + show20;
+                }
+                else{
+                    params += '?show=' + show20;
+                }
+                numb += 1;
+            }
+            if(sort != '' && sort != 'any'){
+                if(numb > 0){
+                    params += '&sort=' + sort;
+                }
+                else{
+                    params += '?sort=' + sort;
+                }
+                numb += 1;
+            }
+            if(page != '' && page != 'any'){
+                if(numb > 0){
+                    params += '&page=' + page;
+                }
+                else{
+                    params += '?page=' + page;
+                }
+                numb += 1;
+            }
+            var url_show20 = '{% url 'staff_users' %}' + params
+
+            params = '';
+            numb = 0;
+            if(type != '' && type != 'any'){
+                params += '?type=' + type;
+                numb += 1;
+            }
+            if(status != '' && status != 'any'){
+                if(numb > 0){
+                    params += '&status=' + status;
+                }
+                else{
+                    params += '?status=' + status;
+                }
+                numb += 1;
+            }
+            if(show50 != '' && show50 != 'any'){
+                if(numb > 0){
+                    params += '&show=' + show50;
+                }
+                else{
+                    params += '?show=' + show50;
+                }
+                numb += 1;
+            }
+            if(sort != '' && sort != 'any'){
+                if(numb > 0){
+                    params += '&sort=' + sort;
+                }
+                else{
+                    params += '?sort=' + sort;
+                }
+                numb += 1;
+            }
+            if(page != '' && page != 'any'){
+                if(numb > 0){
+                    params += '&page=' + page;
+                }
+                else{
+                    params += '?page=' + page;
+                }
+                numb += 1;
+            }
+            var url_show50 = '{% url 'staff_users' %}' + params
+
+            params = '';
+            numb = 0;
+            if(type != '' && type != 'any'){
+                params += '?type=' + type;
+                numb += 1;
+            }
+            if(status != '' && status != 'any'){
+                if(numb > 0){
+                    params += '&status=' + status;
+                }
+                else{
+                    params += '?status=' + status;
+                }
+                numb += 1;
+            }
+            if(show100 != '' && show100 != 'any'){
+                if(numb > 0){
+                    params += '&show=' + show100;
+                }
+                else{
+                    params += '?show=' + show100;
+                }
+                numb += 1;
+            }
+            if(sort != '' && sort != 'any'){
+                if(numb > 0){
+                    params += '&sort=' + sort;
+                }
+                else{
+                    params += '?sort=' + sort;
+                }
+                numb += 1;
+            }
+            if(page != '' && page != 'any'){
+                if(numb > 0){
+                    params += '&page=' + page;
+                }
+                else{
+                    params += '?page=' + page;
+                }
+                numb += 1;
+            }
+            var url_show100 = '{% url 'staff_users' %}' + params
+
+
+            document.getElementById("show10").setAttribute('href', url_show10);
+            document.getElementById("show20").setAttribute('href', url_show20);
+            document.getElementById("show50").setAttribute('href', url_show50);
+            document.getElementById("show100").setAttribute('href', url_show100);
+
+            params = '';
+            numb = 0;
+            if(type != '' && type != 'any'){
+                params += '?type=' + type;
+                numb += 1;
+            }
+            if(status != '' && status != 'any'){
+                if(numb > 0){
+                    params += '&status=' + status;
+                }
+                else{
+                    params += '?status=' + status;
+                }
+                numb += 1;
+            }
+            if(show != '' && show != 'any'){
+                if(numb > 0){
+                    params += '&show=' + show;
+                }
+                else{
+                    params += '?show=' + show;
+                }
+                numb += 1;
+            }
+            if(sortetgup != '' && sortetgup != 'any'){
+                if(numb > 0){
+                    params += '&sort=' + sortetgup;
+                }
+                else{
+                    params += '?sort=' + sortetgup;
+                }
+                numb += 1;
+            }
+            if(page != '' && page != 'any'){
+                if(numb > 0){
+                    params += '&page=' + page;
+                }
+                else{
+                    params += '?page=' + page;
+                }
+                numb += 1;
+            }
+            var etgupurl = '{% url 'staff_users' %}' + params
+
+            params = '';
+            numb = 0;
+            if(type != '' && type != 'any'){
+                params += '?type=' + type;
+                numb += 1;
+            }
+            if(status != '' && status != 'any'){
+                if(numb > 0){
+                    params += '&status=' + status;
+                }
+                else{
+                    params += '?status=' + status;
+                }
+                numb += 1;
+            }
+            if(show != '' && show != 'any'){
+                if(numb > 0){
+                    params += '&show=' + show;
+                }
+                else{
+                    params += '?show=' + show;
+                }
+                numb += 1;
+            }
+            if(sortetgdown != '' && sortetgdown != 'any'){
+                if(numb > 0){
+                    params += '&sort=' + sortetgdown;
+                }
+                else{
+                    params += '?sort=' + sortetgdown;
+                }
+                numb += 1;
+            }
+            if(page != '' && page != 'any'){
+                if(numb > 0){
+                    params += '&page=' + page;
+                }
+                else{
+                    params += '?page=' + page;
+                }
+                numb += 1;
+            }
+            var etgdownurl = '{% url 'staff_users' %}' + params
+
+            params = '';
+            numb = 0;
+            if(type != '' && type != 'any'){
+                params += '?type=' + type;
+                numb += 1;
+            }
+            if(status != '' && status != 'any'){
+                if(numb > 0){
+                    params += '&status=' + status;
+                }
+                else{
+                    params += '?status=' + status;
+                }
+                numb += 1;
+            }
+            if(show != '' && show != 'any'){
+                if(numb > 0){
+                    params += '&show=' + show;
+                }
+                else{
+                    params += '?show=' + show;
+                }
+                numb += 1;
+            }
+            if(sortusdup != '' && sortusdup != 'any'){
+                if(numb > 0){
+                    params += '&sort=' + sortusdup;
+                }
+                else{
+                    params += '?sort=' + sortusdup;
+                }
+                numb += 1;
+            }
+            if(page != '' && page != 'any'){
+                if(numb > 0){
+                    params += '&page=' + page;
+                }
+                else{
+                    params += '?page=' + page;
+                }
+                numb += 1;
+            }
+            var usdupurl = '{% url 'staff_users' %}' + params
+
+            params = '';
+            numb = 0;
+            if(type != '' && type != 'any'){
+                params += '?type=' + type;
+                numb += 1;
+            }
+            if(status != '' && status != 'any'){
+                if(numb > 0){
+                    params += '&status=' + status;
+                }
+                else{
+                    params += '?status=' + status;
+                }
+                numb += 1;
+            }
+            if(show != '' && show != 'any'){
+                if(numb > 0){
+                    params += '&show=' + show;
+                }
+                else{
+                    params += '?show=' + show;
+                }
+                numb += 1;
+            }
+            if(sortusddown != '' && sortusddown != 'any'){
+                if(numb > 0){
+                    params += '&sort=' + sortusddown;
+                }
+                else{
+                    params += '?sort=' + sortusddown;
+                }
+                numb += 1;
+            }
+            if(page != '' && page != 'any'){
+                if(numb > 0){
+                    params += '&page=' + page;
+                }
+                else{
+                    params += '?page=' + page;
+                }
+                numb += 1;
+            }
+            var usddownurl = '{% url 'staff_users' %}' + params
+
+
+            document.getElementById("etg_up").setAttribute('href', etgupurl);
+            document.getElementById("etg_down").setAttribute('href', etgdownurl);
+            document.getElementById("usd_up").setAttribute('href', usdupurl);
+            document.getElementById("usd_down").setAttribute('href', usddownurl);
+
+
+            $('select#typeSelect').on('select2:select', function (e) {
+                var data = e.params.data;
+                type = data.id;
+            });
+
+            $('select#statusSelect').on('select2:select', function (e) {
+                var data = e.params.data;
+                status = data.id;
+            });
+
+
+            $('.show-set').on('click', '.show100',function()
+            {
+                const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+                show = '100';
+                var params = '';
+                var numb = 0;
+                if(type != '' && type != 'any'){
+                    params += '?type=' + type;
+                    numb += 1;
+                }
+                if(status != '' && status != 'any'){
+                    if(numb > 0){
+                        params += '&status=' + status;
+                    }
+                    else{
+                        params += '?status=' + status;
+                    }
+                    numb += 1;
+                }
+                if(show != '' && show != 'any'){
+                    if(numb > 0){
+                        params += '&show=' + show;
+                    }
+                    else{
+                        params += '?show=' + show;
+                    }
+                    numb += 1;
+                }
+                if(sort != '' && sort != 'any'){
+                    if(numb > 0){
+                        params += '&sort=' + sort;
+                    }
+                    else{
+                        params += '?sort=' + sort;
+                    }
+                    numb += 1;
+                }
+                if(page != '' && page != 'any'){
+                    if(numb > 0){
+                        params += '&page=' + page;
+                    }
+                    else{
+                        params += '?page=' + page;
+                    }
+                    numb += 1;
+                }
+                window.location.replace("{% url 'staff_users' %}" + params)
+            });
+
+
+            $('.filter-gr').on('click', '.show-filter',function()
+            {
+                const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+                var params = '';
+                var numb = 0;
+                if(type != '' && type != 'any'){
+                    params += '?type=' + type;
+                    numb += 1;
+                }
+                if(status != '' && status != 'any'){
+                    if(numb > 0){
+                        params += '&status=' + status;
+                    }
+                    else{
+                        params += '?status=' + status;
+                    }
+                    numb += 1;
+                }
+                if(show != '' && show != 'any'){
+                    if(numb > 0){
+                        params += '&show=' + show;
+                    }
+                    else{
+                        params += '?show=' + show;
+                    }
+                    numb += 1;
+                }
+                if(sort != '' && sort != 'any'){
+                    if(numb > 0){
+                        params += '&sort=' + sort;
+                    }
+                    else{
+                        params += '?sort=' + sort;
+                    }
+                    numb += 1;
+                }
+                if(page != '' && page != 'any'){
+                    if(numb > 0){
+                        params += '&page=' + page;
+                    }
+                    else{
+                        params += '?page=' + page;
+                    }
+                    numb += 1;
+                }
+                window.location.replace("{% url 'staff_users' %}" + params)
+            });
+
+
+            $('.search-content').on('click', '.ni-search',function()
+            {
+                const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+                var text = document.getElementById("search-input").value;
+
+                var params = '';
+                var numb = 0;
+                if(type != '' && type != 'any'){
+                    params += '?type=' + type;
+                    numb += 1;
+                }
+                if(status != '' && status != 'any'){
+                    if(numb > 0){
+                        params += '&status=' + status;
+                    }
+                    else{
+                        params += '?status=' + status;
+                    }
+                    numb += 1;
+                }
+                if(show != '' && show != 'any'){
+                    if(numb > 0){
+                        params += '&show=' + show;
+                    }
+                    else{
+                        params += '?show=' + show;
+                    }
+                    numb += 1;
+                }
+                if(sort != '' && sort != 'any'){
+                    if(numb > 0){
+                        params += '&sort=' + sort;
+                    }
+                    else{
+                        params += '?sort=' + sort;
+                    }
+                    numb += 1;
+                }
+                if(page != '' && page != 'any'){
+                    if(numb > 0){
+                        params += '&page=' + page;
+                    }
+                    else{
+                        params += '?page=' + page;
+                    }
+                    numb += 1;
+                }
+
+            });
+
+        });
+    </script>
+{% endblock %}

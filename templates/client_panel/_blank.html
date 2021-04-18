@@ -1,0 +1,291 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="zxx" class="js">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="author" content="unicy">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=yes">
+    <meta name="description" content="A powerful and conceptual apps base dashboard template that especially build for developers and programmers.">
+    <!-- Fav Icon  -->
+    <link rel="shortcut icon" href="./images/favicon.png">
+    <!-- Page Title  -->
+    <title>EMG PROJECT</title>
+    <!-- StyleSheets  -->
+    <link rel="stylesheet" href="{% static 'user_panel/assets/css/dashlite.css' %}?ver=2.2.0">
+    <link id="skin-default" rel="stylesheet" href="{% static 'user_panel/assets/css/theme.css' %}?ver=2.2.0">
+</head>
+
+<body class="nk-body npc-crypto bg-white has-sidebar ">
+<div class="nk-app-root">
+    <!-- main @s -->
+    <div class="nk-main ">
+        <!-- sidebar @s -->
+        <div class="nk-sidebar nk-sidebar-fixed " data-content="sidebarMenu">
+            <div class="nk-sidebar-element nk-sidebar-head">
+                <div class="nk-sidebar-brand">
+                    <a href="html/crypto/index.html" class="logo-link nk-sidebar-logo">
+                        <img class="logo-light logo-img" src="./images/logo.png" srcset="./images/logo2x.png 2x" alt="logo">
+                        <img class="logo-dark logo-img" src="./images/logo-dark.png" srcset="./images/logo-dark2x.png 2x" alt="logo-dark">
+                        <span class="nio-version"></span>
+                    </a>
+                </div>
+                <div class="nk-menu-trigger mr-n2">
+                    <a href="#" class="nk-nav-toggle nk-quick-nav-icon d-xl-none" data-target="sidebarMenu"><em class="icon ni ni-arrow-left"></em></a>
+                </div>
+            </div><!-- .nk-sidebar-element -->
+            <div class="nk-sidebar-element">
+                <div class="nk-sidebar-body" data-simplebar>
+                    <div class="nk-sidebar-content">
+                        <div class="nk-sidebar-widget d-none d-xl-block">
+                            <div class="user-account-info between-center">
+                                <div class="user-account-main">
+                                    <h6 class="overline-title-alt">Ваш баланс</h6>
+                                    <div class="user-balance">{{ user.balance_etg.balance.normalize }} <small class="currency currency-btc">ETG</small></div>
+                                    <div class="user-balance-alt">{{ etg_balance_in_usd }} <span class="currency currency-btc">USD</span></div>
+                                </div>
+                                <a href="{% url 'client_main' %}" class="btn btn-white btn-icon btn-light"><em class="icon ni ni-line-chart"></em></a>
+                            </div>
+                            <!--
+                            -->
+                            <ul class="user-account-data gy-1">
+                                <li>
+                                    <div class="user-account-label">
+                                        <span class="sub-text">Счет USD:</span>
+                                    </div>
+                                    <div class="user-account-value">
+                                        <span class="lead-text">{{ user.balance_usd.balance.normalize }}<span class="currency currency-btc"> USD</span></span>
+                                    </div>
+                                </li>
+                                <li>
+                                    <div class="user-account-label">
+                                        <span class="sub-text">Счет EMG+:</span>
+                                    </div>
+                                    <div class="user-account-value">
+                                        <span class="lead-text">{{ user.balance_etggold.balance.normalize }}<span class="currency currency-btc"> ETG+</span></span>
+                                    </div>
+                                </li>
+                            </ul>
+                            <div class="user-account-actions">
+                                <ul class="g-3">
+                                    <li><a href="{% url 'client_buy' %}" class="btn btn-lg btn-primary"><span>Купить EMG</span></a></li>
+                                    <li><a href="#" class="btn btn-lg btn-warning"><span>Пополнить USD</span></a></li>
+                                </ul>
+                            </div>
+                        </div><!-- .nk-sidebar-widget -->
+                        <div class="nk-sidebar-widget nk-sidebar-widget-full d-xl-none pt-0">
+                            <a class="nk-profile-toggle toggle-expand" data-target="sidebarProfile" href="#">
+                                <div class="user-card-wrap">
+                                    <div class="user-card">
+                                        <div class="user-avatar">
+                                            <span>{{ user.surname|title|first }}{{ user.name|title|first }}</span>
+                                        </div>
+                                        <div class="user-info">
+                                            <span class="lead-text">{{ user.surname|title }} {{ user.name|title }} {{ user.patronymic|title }}</span>
+                                            <span class="sub-text">{{ user.email }}</span>
+                                        </div>
+                                        <div class="user-action">
+                                            <em class="icon ni ni-chevron-down"></em>
+                                        </div>
+                                    </div>
+                                </div>
+                            </a>
+                            <div class="nk-profile-content toggle-expand-content" data-content="sidebarProfile">
+                                <div class="user-account-info between-center">
+                                    <div class="user-account-main">
+                                        <h6 class="overline-title-alt">Ваш Баланс</h6>
+                                        <div class="user-balance">{{ user.balance_etg.balance.normalize }} <small class="currency currency-etg">ETG</small></div>
+                                        <div class="user-balance-alt">{{ etg_balance_in_usd }} <span class="currency currency-usd">USD</span></div>
+                                    </div>
+                                    <a href="{% url 'client_main' %}" class="btn btn-icon btn-light"><em class="icon ni ni-line-chart"></em></a>
+                                </div>
+                                <ul class="user-account-data gy-1">
+                                    <li>
+                                        <div class="user-account-label">
+                                            <span class="sub-text">Счет USD:</span>
+                                        </div>
+                                        <div class="user-account-value">
+                                            <span class="lead-text">{{ user.balance_usd.balance.normalize }}<span class="currency currency-btc"> USD</span></span>
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <div class="user-account-label">
+                                            <span class="sub-text">Счет EMG+:</span>
+                                        </div>
+                                        <div class="user-account-value">
+                                            <span class="lead-text">{{ user.balance_etggold.balance.normalize }}<span class="currency currency-btc"> ETG+</span></span>
+                                        </div>
+                                    </li>
+                                </ul>
+                                <ul class="user-account-links">
+                                    <li><a href="{% url 'client_buy' %}" class="link"><span>Купить EMG</span> <em class="icon ni ni-wallet-in"></em></a></li>
+                                    <li><a href="#" class="link"><span>Пополнить USD</span> <em class="icon ni ni-wallet-out"></em></a></li>
+                                </ul>
+                                {% if user.is_staff %}
+                                <ul class="link-list">
+                                    <li><a href="{% url 'staff_main' %}"><em class="icon ni ni-setting-alt"></em><span>Админ панель</span></a></li>
+                                </ul>
+                                {% endif %}
+                                <ul class="link-list">
+                                    <li><a href="{% url 'client_settings' %}"><em class="icon ni ni-setting-alt"></em><span>Настройки</span></a></li>
+                                </ul>
+                                <ul class="link-list">
+                                    <li><a href="{% url 'client_sigout' %}"><em class="icon ni ni-signout"></em><span>Выйти</span></a></li>
+                                </ul>
+                            </div>
+                        </div><!-- .nk-sidebar-widget -->
+                        <div class="nk-sidebar-menu">
+                            <!-- Menu -->
+                            <ul class="nk-menu">
+                                <li class="nk-menu-heading">
+                                    <h6 class="overline-title">Меню</h6>
+                                </li>
+                                <li class="nk-menu-item">
+                                    <a href="{% url 'client_main' %}" class="nk-menu-link">
+                                        <span class="nk-menu-icon"><em class="icon ni ni-wallet"></em></span>
+                                        <span class="nk-menu-text">Кошелек</span>
+                                    </a>
+                                </li>
+                                <li class="nk-menu-item">
+                                    <a href="{% url 'client_staking' %}" class="nk-menu-link">
+                                        <span class="nk-menu-icon"><em class="icon ni ni-percent"></em></span>
+                                        <span class="nk-menu-text">Ставка</span>
+                                    </a>
+                                </li>
+                                <li class="nk-menu-item">
+                                    <a href="{% url 'client_team' %}" class="nk-menu-link">
+                                        <span class="nk-menu-icon"><em class="icon ni ni-users"></em></span>
+                                        <span class="nk-menu-text">Партнеры</span>
+                                    </a>
+                                </li>
+                                <li class="nk-menu-item">
+                                    <a href="{% url 'client_settings' %}" class="nk-menu-link">
+                                        <span class="nk-menu-icon"><em class="icon ni ni-setting"></em></span>
+                                        <span class="nk-menu-text">Настройки</span>
+                                    </a>
+                                </li>
+                            </ul><!-- .nk-menu -->
+                        </div><!-- .nk-sidebar-menu -->
+                        <div class="nk-sidebar-footer">
+                            <ul class="nk-menu nk-menu-footer">
+                            </ul><!-- .nk-footer-menu -->
+                        </div><!-- .nk-sidebar-footer -->
+                    </div><!-- .nk-sidebar-content -->
+                </div><!-- .nk-sidebar-body -->
+            </div><!-- .nk-sidebar-element -->
+        </div>
+        <!-- sidebar @e -->
+        <!-- wrap @s -->
+        <div class="nk-wrap ">
+            <!-- main header @s -->
+            <div class="nk-header nk-header-fluid nk-header-fixed is-light">
+                <div class="container-fluid">
+                    <div class="nk-header-wrap">
+                        <div class="nk-menu-trigger d-xl-none ml-n1">
+                            <a href="#" class="nk-nav-toggle nk-quick-nav-icon" data-target="sidebarMenu"><em class="icon ni ni-menu"></em></a>
+                        </div>
+                        <div class="nk-header-brand d-xl-none">
+                            <a href="html/crypto/index.html" class="logo-link">
+                                <img class="logo-light logo-img" src="./images/logo.png" srcset="./images/logo2x.png 2x" alt="logo">
+                                <img class="logo-dark logo-img" src="./images/logo-dark.png" srcset="./images/logo-dark2x.png 2x" alt="logo-dark">
+                                <span class="nio-version"></span>
+                            </a>
+                        </div>
+                        <div class="nk-header-news d-none d-xl-block">
+                            <div class="nk-news-list">
+                                {% if not user.is_email_verified %}Внимание! Подтвердите свою почту! <a href="{% url 'client_settings' %}">Не пришло письмо</a>?{% endif %}
+                            </div>
+                        </div>
+                        <div class="nk-header-tools">
+                            <ul class="nk-quick-nav">
+                                <li class="dropdown user-dropdown">
+                                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                                        <div class="user-toggle">
+                                            <div class="user-avatar sm">
+                                                <em class="icon ni ni-user-alt"></em>
+                                            </div>
+                                            <div class="user-info d-none d-md-block">
+                                                {% if user.is_email_verified == False %}<div class="user-status user-status-unverified">Не подтвержден{% else %}<div class="user-status user-status-verified">Активен{% endif %} </div>
+                                                <div class="user-name dropdown-indicator">{{ user.surname|title }} {{ user.name|title }} {{ user.patronymic|title }}</div>
+                                            </div>
+                                        </div>
+                                    </a>
+                                    <div class="dropdown-menu dropdown-menu-md dropdown-menu-right dropdown-menu-s1">
+                                        <div class="dropdown-inner user-card-wrap bg-lighter d-none d-md-block">
+                                            <div class="user-card">
+                                                <div class="user-avatar">
+                                                    <span>{{ user.surname|first|title }}{{ user.name|first|title }}</span>
+                                                </div>
+                                                <div class="user-info">
+                                                    <span class="lead-text">{{ user.surname|title }} {{ user.name|title }} {{ user.patronymic|title }}</span>
+                                                    <span class="sub-text">{{ user.email|lower }}</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        {% if user.is_staff %}
+                                            <div class="dropdown-inner">
+                                                <ul class="link-list">
+                                                    <li><a href="{% url 'staff_main' %}"><em class="icon ni ni-setting-alt"></em><span>Админ панель</span></a></li>
+                                                </ul>
+                                            </div>
+                                        {% endif %}
+                                        <div class="dropdown-inner">
+                                            <ul class="link-list">
+                                                <li><a href="{% url 'client_settings' %}"><em class="icon ni ni-setting-alt"></em><span>Настройки</span></a></li>
+                                            </ul>
+                                        </div>
+                                        <div class="dropdown-inner">
+                                            <ul class="link-list">
+                                                <li><a href="{% url 'client_sigout' %}"><em class="icon ni ni-signout"></em><span>Выйти</span></a></li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- main header @e -->
+            <!-- content @s -->
+            <div class="nk-content nk-content-fluid">
+                <div class="container-xl wide-lg">
+                    <div class="nk-content-body">
+                        {% block content %}
+                        {% endblock %}
+                    </div>
+                </div>
+            </div>
+            <!-- content @e -->
+            <!-- footer @s -->
+            <div class="nk-footer nk-footer-fluid">
+                <div class="container-fluid">
+                    <div class="nk-footer-wrap">
+                        <div class="nk-footer-copyright"> &copy; 2021 EMG</a>
+                        </div>
+                        <div class="nk-footer-links">
+                            <ul class="nav nav-sm">
+                                <li class="nav-item"><a class="nav-link" href="#">Правила</a></li>
+                                <li class="nav-item"><a class="nav-link" href="#">Faq</a></li>
+                                <li class="nav-item"><a class="nav-link" href="#">Помощь</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- footer @e -->
+        </div>
+        <!-- wrap @e -->
+    </div>
+    <!-- main @e -->
+</div>
+<!-- app-root @e -->
+<!-- JavaScript -->
+<script src="{% static 'user_panel/assets/js/bundle.js' %}?ver=2.2.0"></script>
+<script src="{% static 'user_panel/assets/js/scripts.js' %}?ver=2.2.0"></script>
+<script src="{% static 'user_panel/assets/js/charts/chart-crypto.js' %}?ver=2.2.0"></script>
+{% block scripts %}
+{% endblock %}
+</body>
+
+</html>

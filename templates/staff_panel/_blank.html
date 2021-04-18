@@ -1,0 +1,254 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="zxx" class="js">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="author" content="unicy">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=yes">
+    <meta name="description" content="A powerful and conceptual apps base dashboard template that especially build for developers and programmers.">
+    <!-- Fav Icon  -->
+    <link rel="shortcut icon" href="./images/favicon.png">
+    <!-- Page Title  -->
+    <title>EMG PROJECT</title>
+    <!-- StyleSheets  -->
+    <link rel="stylesheet" href="{% static 'user_panel/assets/css/dashlite.css' %}?ver=2.2.0">
+    <link id="skin-default" rel="stylesheet" href="{% static 'user_panel/assets/css/theme.css' %}?ver=2.2.0">
+    <style type="text/css">/* Chart.js */
+    @keyframes chartjs-render-animation{from{opacity:.99}to{opacity:1}}.chartjs-render-monitor{animation:chartjs-render-animation 1ms}.chartjs-size-monitor,.chartjs-size-monitor-expand,.chartjs-size-monitor-shrink{position:absolute;direction:ltr;left:0;top:0;right:0;bottom:0;overflow:hidden;pointer-events:none;visibility:hidden;z-index:-1}.chartjs-size-monitor-expand>div{position:absolute;width:1000000px;height:1000000px;left:0;top:0}.chartjs-size-monitor-shrink>div{position:absolute;width:200%;height:200%;left:0;top:0}</style>
+</head>
+
+<body class="nk-body npc-crypto bg-white has-sidebar ">
+<div class="nk-app-root">
+    <!-- main @s -->
+    <div class="nk-main ">
+        <!-- sidebar @s -->
+        <div class="nk-sidebar nk-sidebar-fixed " data-content="sidebarMenu">
+            <div class="nk-sidebar-element nk-sidebar-head">
+                <div class="nk-sidebar-brand">
+                    <a href="html/crypto/index.html" class="logo-link nk-sidebar-logo">
+                        <img class="logo-light logo-img" src="./images/logo.png" srcset="./images/logo2x.png 2x" alt="logo">
+                        <img class="logo-dark logo-img" src="./images/logo-dark.png" srcset="./images/logo-dark2x.png 2x" alt="logo-dark">
+                        <span class="nio-version"></span>
+                    </a>
+                </div>
+                <div class="nk-menu-trigger mr-n2">
+                    <a href="#" class="nk-nav-toggle nk-quick-nav-icon d-xl-none" data-target="sidebarMenu"><em class="icon ni ni-arrow-left"></em></a>
+                </div>
+            </div><!-- .nk-sidebar-element -->
+            <div class="nk-sidebar-element">
+                <div class="nk-sidebar-body" data-simplebar>
+                    <div class="nk-sidebar-content">
+                        <div class="nk-sidebar-widget nk-sidebar-widget-full d-xl-none pt-0">
+                            <a class="nk-profile-toggle toggle-expand" data-target="sidebarProfile" href="#">
+                                <div class="user-card-wrap">
+                                    <div class="user-card">
+                                        <div class="user-avatar">
+                                            <span>{{ user.surname|title|first }}{{ user.name|title|first }}</span>
+                                        </div>
+                                        <div class="user-info">
+                                            <span class="lead-text">{{ user.surname|title }} {{ user.name|title }} {{ user.patronymic|title }}</span>
+                                            <span class="sub-text">{{ user.email }}</span>
+                                        </div>
+                                        <div class="user-action">
+                                            <em class="icon ni ni-chevron-down"></em>
+                                        </div>
+                                    </div>
+                                </div>
+                            </a>
+                            <div class="nk-profile-content toggle-expand-content" data-content="sidebarProfile">
+                                    <ul class="link-list">
+                                        <li><a href="{% url 'client_main' %}"><em class="icon ni ni-setting-alt"></em><span>Клиент панель</span></a></li>
+                                    </ul>
+                                <ul class="link-list">
+                                    <li><a href="{% url 'client_settings' %}"><em class="icon ni ni-setting-alt"></em><span>Настройки</span></a></li>
+                                </ul>
+                                <ul class="link-list">
+                                    <li><a href="{% url 'client_sigout' %}"><em class="icon ni ni-signout"></em><span>Выйти</span></a></li>
+                                </ul>
+                            </div>
+                        </div><!-- .nk-sidebar-widget -->
+                        <div class="nk-sidebar-menu">
+                            <!-- Menu -->
+                            <ul class="nk-menu">
+                                <li class="nk-menu-item">
+                                    <a href="{% url 'staff_main' %}" class="nk-menu-link">
+                                        <span class="nk-menu-icon"><em class="icon ni ni-home"></em></span>
+                                        <span class="nk-menu-text">Главная</span>
+                                    </a>
+                                </li>
+                                <li class="nk-menu-heading">
+                                    <h6 class="overline-title">Меню</h6>
+                                </li>
+                                <li class="nk-menu-item">
+                                    <a href="{% url 'staff_users' %}" class="nk-menu-link">
+                                        <span class="nk-menu-icon"><em class="icon ni ni-users"></em></span>
+                                        <span class="nk-menu-text">Пользователи</span>
+                                    </a>
+                                </li>
+                                <li class="nk-menu-item">
+                                    <a href="{% url 'staff_finance_settings' %}" class="nk-menu-link">
+                                        <span class="nk-menu-icon"><em class="icon ni ni-setting"></em></span>
+                                        <span class="nk-menu-text">Финансовые настройки</span>
+                                    </a>
+                                </li>
+                                <li class="nk-menu-item">
+                                    <a href="{% url 'staff_system_settings' %}" class="nk-menu-link">
+                                        <span class="nk-menu-icon"><em class="icon ni ni-setting"></em></span>
+                                        <span class="nk-menu-text">Системные настройки</span>
+                                    </a>
+                                </li>
+                                <li class="nk-menu-heading">
+                                    <h6 class="overline-title">Медиа</h6>
+                                </li>
+                                <li class="nk-menu-item">
+                                    <a href="{% url 'staff_news' %}" class="nk-menu-link">
+                                        <span class="nk-menu-icon"><em class="icon ni ni-property-alt"></em></span>
+                                        <span class="nk-menu-text">Новости</span>
+                                    </a>
+                                </li>
+                                <li class="nk-menu-item">
+                                    <a href="{% url 'staff_faqs' %}" class="nk-menu-link">
+                                        <span class="nk-menu-icon"><em class="icon ni ni-question"></em></span>
+                                        <span class="nk-menu-text">Faq</span>
+                                    </a>
+                                </li>
+                                <li class="nk-menu-item">
+                                    <a href="{% url 'staff_roadmap' %}" class="nk-menu-link">
+                                        <span class="nk-menu-icon"><em class="icon ni ni-map"></em></span>
+                                        <span class="nk-menu-text">Дорожная карта</span>
+                                    </a>
+                                </li>
+                            </ul><!-- .nk-menu -->
+                        </div><!-- .nk-sidebar-menu -->
+                        <div class="nk-sidebar-footer">
+                            <ul class="nk-menu nk-menu-footer">
+                            </ul><!-- .nk-footer-menu -->
+                        </div><!-- .nk-sidebar-footer -->
+                    </div><!-- .nk-sidebar-content -->
+                </div><!-- .nk-sidebar-body -->
+            </div><!-- .nk-sidebar-element -->
+        </div>
+        <!-- sidebar @e -->
+        <!-- wrap @s -->
+        <div class="nk-wrap ">
+            <!-- main header @s -->
+            <div class="nk-header nk-header-fluid nk-header-fixed is-light">
+                <div class="container-fluid">
+                    <div class="nk-header-wrap">
+                        <div class="nk-menu-trigger d-xl-none ml-n1">
+                            <button class="nk-nav-toggle nk-quick-nav-icon" data-target="sidebarMenu"><em class="icon ni ni-menu"></em></button>
+                        </div>
+                        <div class="nk-header-brand d-xl-none">
+                            <a href="html/crypto/index.html" class="logo-link">
+                                <img class="logo-light logo-img" src="./images/logo.png" srcset="./images/logo2x.png 2x" alt="logo">
+                                <img class="logo-dark logo-img" src="./images/logo-dark.png" srcset="./images/logo-dark2x.png 2x" alt="logo-dark">
+                                <span class="nio-version"></span>
+                            </a>
+                        </div>
+                        <div class="nk-header-news d-none d-xl-block">
+                            <div class="nk-news-list">
+                                {% if not user.is_email_verified %}Внимание! Подтвердите свою почту! <a href="{% url 'client_settings' %}">Не пришло письмо</a>?{% endif %}
+                            </div>
+                        </div>
+                        <div class="nk-header-tools">
+                            <ul class="nk-quick-nav">
+                                <li class="dropdown user-dropdown">
+                                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                                        <div class="user-toggle">
+                                            <div class="user-avatar sm">
+                                                <em class="icon ni ni-user-alt"></em>
+                                            </div>
+                                            <div class="user-info d-none d-md-block">
+                                                {% if user.is_email_verified == False %}<div class="user-status user-status-unverified">Не подтвержден{% else %}<div class="user-status user-status-verified">Активен{% endif %} </div>
+                                                <div class="user-name dropdown-indicator">{{ user.surname|title }} {{ user.name|title }} {{ user.patronymic|title }}</div>
+                                                </div>
+                                            </div>
+                                    </a>
+                                    <div class="dropdown-menu dropdown-menu-md dropdown-menu-right dropdown-menu-s1">
+                                        <div class="dropdown-inner user-card-wrap bg-lighter d-none d-md-block">
+                                            <div class="user-card">
+                                                <div class="user-avatar">
+                                                    <span>{{ user.surname|first|title }}{{ user.name|first|title }}</span>
+                                                </div>
+                                                <div class="user-info">
+                                                    <span class="lead-text">{{ user.surname|title }} {{ user.name|title }} {{ user.patronymic|title }}</span>
+                                                    <span class="sub-text">{{ user.email|lower }}</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                            <div class="dropdown-inner">
+                                                <ul class="link-list">
+                                                    <li><a href="{% url 'client_main' %}"><em class="icon ni ni-setting-alt"></em><span>Клиент панель</span></a></li>
+                                                </ul>
+                                            </div>
+                                        <div class="dropdown-inner">
+                                            <ul class="link-list">
+                                                <li><a href="{% url 'client_settings' %}"><em class="icon ni ni-setting-alt"></em><span>Настройки</span></a></li>
+                                            </ul>
+                                        </div>
+                                        <div class="dropdown-inner">
+                                            <ul class="link-list">
+                                                <li><a href="{% url 'client_sigout' %}"><em class="icon ni ni-signout"></em><span>Выйти</span></a></li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- main header @e -->
+            <!-- content @s -->
+            <div class="nk-content nk-content-fluid">
+                <div class="container-xl wide-lg">
+                    <div class="nk-content-body">
+                        {% block content %}
+                        {% endblock %}
+                    </div>
+                </div>
+            </div>
+            <!-- content @e -->
+            <!-- footer @s -->
+            <div class="nk-footer nk-footer-fluid">
+                <div class="container-fluid">
+                    <div class="nk-footer-wrap">
+                        <div class="nk-footer-copyright"> &copy; 2021 EMG</a>
+                        </div>
+                        <div class="nk-footer-links">
+                            <ul class="nav nav-sm">
+                                <li class="nav-item"><a class="nav-link" href="#">Правила</a></li>
+                                <li class="nav-item"><a class="nav-link" href="#">Faq</a></li>
+                                <li class="nav-item"><a class="nav-link" href="#">Помощь</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- footer @e -->
+        </div>
+        <!-- wrap @e -->
+    </div>
+    <!-- main @e -->
+</div>
+<!-- app-root @e -->
+<!-- JavaScript -->
+<script src="{% static 'user_panel/assets/js/bundle.js' %}?ver=2.2.0"></script>
+<script src="{% static 'user_panel/assets/js/scripts.js' %}?ver=2.2.0"></script>
+<script src="{% static 'user_panel/assets/js/charts/chart-crypto.js' %}?ver=2.2.0"></script>
+<script src="{% static 'user_panel/assets/js/libs/jqvmap.js' %}?ver=2.2.0"></script>
+<link rel="stylesheet" href="{% static 'user_panel/assets/css/editors/tinymce.css' %}?ver=2.2.0">
+<script src="{% static 'user_panel/assets/js/libs/editors/tinymce.js' %}?ver=2.2.0"></script>
+<script src="{% static 'user_panel/assets/js/libs/editors/summernote.js' %}?ver=2.2.0"></script>
+<link rel="stylesheet" href="{% static 'user_panel/assets/css/editors/summernote.css' %}?ver=2.2.0">
+
+<div class="jqvmap-label" style="display: none;"></div>
+{% block scripts %}
+    <script>
+
+    </script>
+{% endblock %}
+</body>
+
+</html>

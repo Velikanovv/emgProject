@@ -1,0 +1,85 @@
+{% extends 'staff_panel/_blank.html' %}
+{% load static %}
+
+{% block content %}
+    <div class="nk-content-body">
+        <div class="nk-block-head nk-block-head-sm">
+            <div class="nk-block-between">
+                <div class="nk-block-head-content">
+                    <h3 class="nk-block-title page-title">Дорожная карта</h3>
+                    <div class="nk-block-des text-soft">
+                        <p>Список всех ответов</p>
+                    </div>
+                </div><!-- .nk-block-head-content -->
+                <div class="nk-block-head-content">
+                    <div class="toggle-wrap nk-block-tools-toggle">
+                        <a href="#" class="btn btn-icon btn-trigger toggle-expand mr-n1" data-target="pageMenu"><em class="icon ni ni-menu-alt-r"></em></a>
+                        <div class="toggle-expand-content" data-content="pageMenu">
+                            {% csrf_token %}
+                            <ul class="nk-block-tools g-3 ">
+                                <li class="nk-block-tools-opt btns-d"><button class="btn btn-primary btn-save"><em class="icon ni ni-save"></em><span>Создать</span></button></li>
+                                <li class="nk-block-tools-opt"><a href="{% url 'staff_roadmap' %}" class="btn btn-light"><em class="icon ni ni-back-alt"></em><span>Назад</span></a></li>
+                            </ul>
+                        </div>
+                    </div><!-- .toggle-wrap -->
+                </div><!-- .nk-block-head-content -->
+            </div><!-- .nk-block-between -->
+        </div><!-- .nk-block-head -->
+        <div class="form-group">
+            <label class="form-label">Название</label>
+            <div class="input-group">
+                <input type="text" class="form-control" placeholder="Введите название" aria-label="" aria-describedby="btnGroupAddon" value="" name="etginusd" id="roadmaptitle">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="form-label">Год</label>
+            <div class="form-control-wrap">
+                <div class="form-icon form-icon-right">
+                    <em class="icon ni ni-calendar-alt"></em>
+                </div>
+                <input type="text" class="form-control date-picker" id="pdate" value="">
+            </div>
+            <div class="form-note">Формат: Месяц/День/Год</div>
+        </div>
+    </div>
+{% endblock %}
+{% block scripts %}
+    <script>
+        'use strict';
+        $(document).ready(function () {
+
+            $('.btns-d').on('click', '.btn-save',function()
+            {
+                const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+                var title = document.getElementById('roadmaptitle').value
+                var date = document.getElementById('pdate').value
+                var ready = true;
+                if(ready){
+                    $.ajax
+                    ({
+                        data:
+                            {
+                                csrfmiddlewaretoken: csrftoken,
+                                title: title,
+                                date: date,
+                                action: 'create',
+
+                            }, // get the form data
+                        type: "POST", // GET or POST
+                        url: "{% url 'staff_roadmap_create' %}",
+                        // on success
+                        success: function (response)
+                        {
+                            window.location.replace('{% url 'staff_roadmap' %}');
+                        },
+                        // on error
+                        error: function (response)
+                        {
+                            Swal.fire("Ошибка", response.errors, "error");
+                        }
+                    });
+                }
+            });
+        });
+    </script>
+{% endblock %}

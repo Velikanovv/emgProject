@@ -1,0 +1,66 @@
+{% extends 'staff_panel/_userblank.html' %}
+{% load static %}
+
+{% block usrcontent %}
+    <div class="card-inner">
+    <div class="nk-block">
+        <div class="nk-block-head">
+            <h5 class="title">Персональная информация</h5>
+        </div><!-- .nk-block-head -->
+        <div class="profile-ud-list">
+            <div class="profile-ud-item">
+                <div class="profile-ud wider">
+                    <span class="profile-ud-label">Имя</span>
+                    <span class="profile-ud-value">{{ user.name|title }}</span>
+                </div>
+            </div>
+            <div class="profile-ud-item">
+                <div class="profile-ud wider">
+                    <span class="profile-ud-label">Фамилия</span>
+                    <span class="profile-ud-value">{{ user.surname|title }}</span>
+                </div>
+            </div>
+            <div class="profile-ud-item">
+                <div class="profile-ud wider">
+                    <span class="profile-ud-label">Отчество</span>
+                    <span class="profile-ud-value">{{ user.patronymic|title }}</span>
+                </div>
+            </div>
+            <div class="profile-ud-item">
+                <div class="profile-ud wider">
+                    <span class="profile-ud-label">ФИО</span>
+                    <span class="profile-ud-value">{{ user.surname|title }} {{ user.name|title }} {{ user.patronymic|title }}</span>
+                </div>
+            </div>
+            <div class="profile-ud-item">
+                <div class="profile-ud wider">
+                    <span class="profile-ud-label">Номер телефона</span>
+                    <span class="profile-ud-value">{{ user.phone_number.number }}</span>
+                </div>
+            </div>
+            <div class="profile-ud-item">
+                <div class="profile-ud wider">
+                    <span class="profile-ud-label">Почта</span>
+                    <span class="profile-ud-value">{{ user.email }}</span>
+                </div>
+            </div>
+        </div><!-- .profile-ud-list -->
+    </div><!-- .nk-block -->
+    <div class="nk-block">
+        <div class="nk-block-head nk-block-head-line">
+            <h6 class="title overline-title text-base">Доп. Информация</h6>
+        </div><!-- .nk-block-head -->
+        <div class="profile-ud-list">
+            <div class="profile-ud-item">
+                <div class="profile-ud wider">
+                    <span class="profile-ud-label">Дата регистрации</span>
+                    <span class="profile-ud-value">{{ user.date_joined|date:"d.m.Y" }}</span>
+                </div>
+            </div>
+        </div><!-- .profile-ud-list -->
+    </div><!-- .nk-block -->
+    <div class="nk-divider divider md"></div>
+    </div>
+{% endblock %}
+{% block u_scripts %}
+{% endblock %}

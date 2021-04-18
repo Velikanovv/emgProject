@@ -1,0 +1,216 @@
+{% extends 'client_panel/_blank.html' %}
+{% load static %}
+{% block content %}
+    <div class="buysell wide-xs m-auto">
+        <div class="buysell-title text-left">
+            <h3 class="title">Покупка</h3>
+        </div><!-- .buysell-title -->
+        <div class="buysell-block">
+            <form class="">
+                <div class="buysell-field form-group">
+                    <div class="form-label-group">
+                        <label class="form-label">Приобретаемая валюта</label>
+                    </div>
+                    <input type="hidden" value="btc" name="bs-currency" id="buysell-choose-currency">
+                    <div class="dropdown buysell-cc-dropdown">
+                        <div class="buysell-cc-choosen" data-toggle="dropdown">
+                            <div class="coin-item coin-btc">
+                                <div class="coin-icon">
+                                    <em class="icon ni ni-sign-waves-alt"></em>
+                                </div>
+                                <div class="coin-info">
+                                    <span class="coin-name">EMG</span>
+                                    <span class="coin-text">Ваш баланс: {{ etg_wallet.balance.normalize }} EMG</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div><!-- .dropdown -->
+                </div><!-- .buysell-field -->
+                <div class="buysell-field form-group">
+                    <div class="form-label-group">
+                        <label class="form-label" for="buysell-amount">Введите колличество</label>
+                    </div>
+                    <div class="form-control-group etg-form-input">
+                        <input type="text" class="form-control form-control-lg form-control-number etg-input" id="buysell-amount" name="bs-amount" placeholder="10">
+                        <div class="form-dropdown">
+                            <div class="text">EMG<span></span></div>
+                            <div class="dropdown">
+                                <div data-offset="0,2"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-note-group">
+                        <span class="buysell-min form-note-alt">Minimum: 1 EMG</span>
+                        <span class="buysell-rate form-note-alt">1 EMG = {{ finance_settings.rateETGinUSD.normalize }} USD</span>
+                    </div>
+                </div><!-- .buysell-field -->
+                <div class="buysell-field form-action">
+                    {% csrf_token %}
+                    <button type="button" class="btn btn-lg btn-block btn-primary" data-toggle="modal" data-target="#buy-etg" id="buy_button" disabled>Введите число</button>
+                    <div class="modal fade" tabindex="-1" id="buy-etg">
+                        <div class="modal-dialog" role="document"><div class="modal-content">
+                            <a href="#" class="close" data-dismiss="modal"><em class="icon ni ni-cross-sm"></em></a>
+                            <div class="modal-body modal-body-lg">
+                                <div class="nk-block-head nk-block-head-xs text-center">
+                                    <h5 class="nk-block-title">Подтверждение покупки</h5>
+                                    <div class="nk-block-text">
+                                        <div class="caption-text">Покупка <strong id="etg-amount-ready">32</strong> EMG за <strong id="usd-amount-ready">534</strong> USD</div>
+                                        <span class="sub-text-sm">1 EMG = {{ finance_settings.rateETGinUSD.normalize }} USD</span>
+                                    </div>
+                                </div>
+                                <div class="nk-block">
+                                    <div class="buysell-overview">
+                                        <ul class="buysell-overview-list">
+                                            <li class="buysell-overview-item">
+                                                <span class="pm-title">Снятие с </span>
+                                                <span class="pm-currency"><span>USD Счет</span></span>
+                                            </li>
+                                            <li class="buysell-overview-item">
+                                                <span class="pm-title">Сумма</span>
+                                                <span class="pm-currency"><span id="usd-amount-ready2">534</span><span> USD</span></span>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                    <div class="buysell-field form-group">
+                                        <div class="form-label-group">
+                                            <label class="form-label">Будет зачисленно на</label>
+                                        </div>
+                                        <input type="hidden" value="btc" name="bs-currency" id="buysell-choose-currency-modal">
+                                        <div class="dropdown buysell-cc-dropdown">
+                                            <div class="buysell-cc-choosen" data-toggle="dropdown">
+                                                <div class="coin-item coin-btc">
+                                                    <div class="coin-icon">
+                                                        <em class="icon ni ni-sign-waves-alt"></em>
+                                                    </div>
+                                                    <div class="coin-info">
+                                                        <span class="coin-name">EMG Счет</span>
+                                                        <span class="coin-text">Баланс: {{ etg_wallet.balance.normalize }} EMG</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div><!-- .dropdown -->
+                                    </div><!-- .buysell-field -->
+                                    <div class="buysell-field form-action text-center submitPayment-group">
+                                        <div>
+                                            <button type="button" class="btn btn-primary btn-lg submitPayment-button" data-dismiss="modal" data-toggle="modal" data-target="#confirm-coin" id="">Подтвердить покупку</button>
+                                        </div>
+                                        <div class="pt-3">
+                                            <a href="#" data-dismiss="modal" class="link link-danger">Отмена</a>
+                                        </div>
+                                    </div>
+                                </div><!-- .nk-block -->
+                            </div><!-- .modal-body -->
+                        </div>
+                        </div>
+                    </div>
+                </div><!-- .buysell-field -->
+                <div class="text-base text-center"><a href="#">Пополнить Счет USD</a></div>
+            </form><!-- .buysell-form -->
+        </div><!-- .buysell-block -->
+    </div>
+{% endblock %}
+{% block scripts %}
+    <script>
+        'use strict';
+        $(document).ready(function () {
+
+            var elFirstButton = document.getElementById('buy_button');
+            var elInput = document.getElementById('buysell-amount');
+            var amount;
+            var number;
+            elFirstButton.innerHTML = "Введите число";
+            elFirstButton.disabled = true;
+
+            $('.etg-form-input').on('input', '.etg-input',function()
+            {
+                var text = elInput.value.trim();
+                var is_num = true;
+                for (var i = 0;  i < text.length; i++) {
+                    if(!parseFloat(text[i], 10)){
+                        if(text[i] != "." && text[i] != "0"){
+                            is_num = false;
+                        }
+                    }
+                }
+                if(parseFloat(text, 10) && is_num == true){
+                    var dot = 0;
+                    var new_text = "";
+                    for (var i = 0;  i < text.length; i++) {
+                        if(dot < 1){
+                            if(text[i] == '.'){
+                                dot = 1;
+                            }
+                            new_text = new_text + text[i];
+                        }
+                        else {
+                            if(dot < 10){
+                                new_text = new_text + text[i];
+                                dot += 1;
+                            }
+                        }
+                    }
+                    if(dot > 9){
+                        elInput.value = new_text;
+                        number = Number.parseFloat(new_text);
+                    }
+                    else {
+                        number = Number.parseFloat(text);
+                    }
+                    if(number <= {{ finance_settings.etgCount }}){
+                        amount = Number(number * ({{ finance_settings.rateETGinUSD }}));
+                        if(amount.toFixed(2) <= {{ usd_wallet.balance.normalize }}){
+                            document.getElementById('etg-amount-ready').innerHTML = number;
+                            document.getElementById('usd-amount-ready').innerHTML = amount.toFixed(2);
+                            document.getElementById('usd-amount-ready2').innerHTML = amount.toFixed(2);
+                            elFirstButton.innerHTML = "Купить за " + String(amount.toFixed(2)) + " USD";
+                            elFirstButton.disabled = false;
+                        }
+                        else {
+                            elFirstButton.innerHTML = "Недостаточно средств";
+                            elFirstButton.disabled = true;
+                        }
+                    }
+                    else {
+                        elFirstButton.innerHTML = "Превышено максимально допустимое значение";
+                        elFirstButton.disabled = true;
+                    }
+                }
+                else {
+                    elFirstButton.innerHTML = "Введите число";
+                    elFirstButton.disabled = true;
+                }
+            });
+
+            $('.submitPayment-group').on('click', '.submitPayment-button',function()
+            {
+                const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+
+                var ready = true;
+                if(ready){
+                    $.ajax
+                    ({
+                        data:
+                            {
+                                csrfmiddlewaretoken: csrftoken,
+                                count: number,
+                                action: 'buy-etg'
+                            }, // get the form data
+                        type: "POST", // GET or POST
+                        url: "{% url 'client_buy' %}",
+                        // on success
+                        success: function (response)
+                        {
+                            Swal.fire("Успешно", "Покупка совершена. Обновите страницу.", "success");
+                        },
+                        // on error
+                        error: function (response)
+                        {
+                            Swal.fire("Ошибка", response.responseJSON.errors, "error");
+                        }
+                    });
+                }
+            });
+
+        });
+    </script>
+{% endblock %}

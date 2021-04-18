@@ -1,0 +1,478 @@
+{% extends 'staff_panel/_blank.html' %}
+{% load static %}
+
+{% block content %}
+    {% csrf_token %}
+    <div class="nk-block-head nk-block-head-sm">
+        <div class="nk-block-between g-3">
+            <div class="nk-block-head-content">
+                <h3 class="nk-block-title page-title">Пользователи / <strong class="text-primary small">{{ c_user.surname|title }} {{ c_user.name|title }} {{ c_user.patronymic|title }}</strong></h3>
+                <div class="nk-block-des text-soft">
+                    <ul class="list-inline">
+                        <li>ID Пользователя: <span class="text-base">{{ c_user.pk }}</span></li>
+                        <li>Последний вход: <span class="text-base">{{ c_user.last_login|date:"d.m.Y" }}</span></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="nk-block-head-content">
+                <a href="{% url 'staff_users' %}" class="btn btn-outline-light bg-white d-none d-sm-inline-flex"><em class="icon ni ni-arrow-left"></em><span>Назад</span></a>
+                <a href="{% url 'staff_users' %}" class="btn btn-icon btn-outline-light bg-white d-inline-flex d-sm-none"><em class="icon ni ni-arrow-left"></em></a>
+            </div>
+        </div>
+    </div><!-- .nk-block-head -->
+    <div class="nk-block">
+        <div class="card card-bordered">
+            <div class="card-aside-wrap">
+                <div class="card-content">
+                    <ul class="nav nav-tabs nav-tabs-mb-icon nav-tabs-card">
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'staff_user_view' c_user.pk %}"><em class="icon ni ni-user-circle"></em><span>Основное</span></a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'staff_user_give_etg' c_user.pk %}"><em class="icon ni ni-coins"></em><span>Выдать</span></a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'staff_user_transactions' c_user.pk %}"><em class="icon ni ni-tranx"></em><span>Транзакции</span></a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'staff_user_ips' c_user.pk %}"><em class="icon ni ni-activity"></em><span>IP</span></a>
+                        </li>
+                        {% if c_user.role == 2 %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'staff_user_referal' c_user.pk %}"><em class="icon ni ni-users"></em><span>Партнерка</span></a>
+                        </li>
+                        {% endif %}
+                        <li class="nav-item nav-item-trigger d-xxl-none">
+                            <a href="#" class="toggle btn btn-icon btn-trigger" data-target="userAside"><em class="icon ni ni-user-list-fill"></em></a>
+                        </li>
+                    </ul><!-- .nav-tabs -->
+                        {% block usrcontent %}
+                        {% endblock %}
+                </div><!-- .card-content -->
+                <div class="card-aside card-aside-right user-aside toggle-slide toggle-slide-right toggle-break-xxl" data-content="userAside" data-toggle-screen="xxl" data-toggle-overlay="true" data-toggle-body="true">
+                    <div class="card-inner-group" data-simplebar>
+                        <div class="card-inner">
+                            <div class="user-card user-card-s2">
+                                <div class="user-avatar lg bg-{% if c_user.is_staff %}danger{% else %}{% if c_user.role == 1 %}light{% else %}primary{% endif %}{% endif %}">
+                                    <span>{{ c_user.surname|title|first }}{{ c_user.name|title|first }}</span>
+                                </div>
+                                <div class="user-info">
+                                    {% if c_user.is_staff %}
+                                        <div class="badge badge-outline-danger badge-pill ucap">Администратор</div>
+                                    {% else %}
+
+                                        {% if c_user.role == 1 %}
+                                            <div class="badge badge-outline-light badge-pill ucap">Стандарт</div>
+                                        {% else %}
+                                            <div class="badge badge-outline-primary badge-pill ucap">Блогер</div>
+                                        {% endif %}
+                                    {% endif %}
+                                    {% if c_user.is_banned %}
+                                        <div class="badge badge-danger badge-pill ucap">Заблокирован</div>
+                                    {% endif %}
+                                    <h5>{{ c_user.surname|title }} {{ c_user.name|title }} {{ c_user.patronymic|title }}</h5>
+                                    <span class="sub-text">{{ c_user.email|lower }}</span>
+                                </div>
+                            </div>
+                        </div><!-- .card-inner -->
+                        <div class="card-inner card-inner-sm">
+                            <ul class="btn-toolbar justify-center gx-1">
+                                {% if c_user.is_active and not c_user.role == 2 and not c_user.is_staff %}
+                                    <li><button class="btn btn-trigger btn-icon text-primary" data-toggle="modal" data-target="#modalAlert6"><em class="icon ni ni-star-fill"></em></button></li>
+                                {% endif %}
+                                {% if c_user.is_active and not c_user.role == 1 and not c_user.is_staff %}
+                                    <li><button class="btn btn-trigger btn-icon"><em class="icon ni ni-star" data-toggle="modal" data-target="#modalAlert7"></em></button></li>
+                                {% endif %}
+                                {% if c_user.is_staff and not c_user.is_superuser %}
+                                    <li><button class="btn btn-trigger btn-icon text-danger" data-toggle="modal" data-target="#modalAlert5"><em class="icon ni ni-shield-off"></em></button></li>
+                                {% endif %}
+                                {% if not c_user.is_staff and not c_user.is_banned %}
+                                    <li><button class="btn btn-trigger btn-icon text-warning" data-toggle="modal" data-target="#modalAlert4"><em class="icon ni ni-security"></em></button></li>
+                                    <li><button class="btn btn-trigger btn-icon text-danger" data-toggle="modal" data-target="#modalAlert2"><em class="icon ni ni-na"></em></button></li>
+                                {% endif %}
+                                {% if c_user.is_banned %}
+                                    <li><button class="btn btn-trigger btn-icon text-success" data-toggle="modal" data-target="#modalAlert3"><em class="icon ni ni-power"></em></a></li>
+                                {% endif %}
+                            </ul>
+                        </div><!-- .card-inner -->
+
+                        <div class="card-inner">
+                            <div class="overline-title mb-2">EMG Счет</div>
+                            <div class="profile-balance">
+                                <div class="profile-balance-group gx-4">
+                                    <div class="profile-balance-sub">
+                                        <div class="profile-balance-amount">
+                                            <div class="number">{{ c_user.balance_etg.balance.normalize }}<small class="currency currency-usd"> EMG</small></div>
+                                            <div class="number">{{ c_user.balance_etg.balance_in_usd.normalize }}<small class="currency currency-usd"> USD</small></div>
+                                        </div>
+                                        <div class="profile-balance-subtitle">Баланс</div>
+                                    </div>
+                                </div>
+                                <br>
+                                <div class="profile-balance-group gx-4">
+                                    <div class="profile-balance-sub">
+                                        <div class="profile-balance-amount">
+                                            <div class="number">{{ c_user.balance_etggold.balance.normalize }}<small class="currency currency-usd"> EMG</small></div>
+                                            <div class="number">{{ c_user.balance_etggold.balance_in_usd.normalize }}<small class="currency currency-usd"> USD</small></div>
+                                        </div>
+                                        <div class="profile-balance-subtitle">Стакинг</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div><!-- .card-inner -->
+                        <div class="card-inner">
+                            <div class="overline-title mb-2">USD Счет</div>
+                            <div class="profile-balance">
+                                <div class="profile-balance-group gx-4">
+                                    <div class="profile-balance-sub">
+                                        <div class="profile-balance-amount">
+                                            <div class="number">{{ c_user.balance_usd.balance.normalize }}<small class="currency currency-usd"> USD</small></div>
+                                        </div>
+                                        <div class="profile-balance-subtitle">Баланс</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div><!-- .card-inner -->
+                        <div class="card-inner">
+                            <div class="overline-title mb-2">Партнеры</div>
+                            <div class="row text-center">
+                                <div class="col-4">
+                                    <div class="profile-stats">
+                                        <span class="amount">{{ c_user.referal_card.referal_list.all.count }}</span>
+                                        <span class="sub-text">Кол-во</span>
+                                    </div>
+                                </div>
+                                <div class="col-4">
+                                    <div class="profile-stats">
+                                        <span class="amount">{{ c_user.referal_card.all_levels_earned.normalize }} USD</span>
+                                        <span class="sub-text">Получено</span>
+                                    </div>
+                                </div>
+                                <div class="col-4">
+                                    <div class="profile-stats">
+                                        <span class="amount">{{ c_user.referal_card.referal_code|upper }}</span>
+                                        <span class="sub-text">Код</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div><!-- .card-inner -->
+                    </div><!-- .card-inner -->
+                </div><!-- .card-aside -->
+            </div><!-- .card-aside-wrap -->
+        </div><!-- .card -->
+    </div><!-- .nk-block -->
+
+    {% csrf_token %}
+    <div class="modal fade" tabindex="-1" id="modalAlert2" style="display: none;" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-body modal-body-lg text-center">
+                    <div class="nk-modal">
+                        <em class="nk-modal-icon icon icon-circle icon-circle-xxl ni ni-na bg-danger"></em>
+                        <h4 class="nk-modal-title">Блокировка акканта</h4>
+                        <div class="nk-modal-text">
+                            <p class="lead">Вы уверенны что хотите заблокировать данного пользователя?</p>
+                            <p class="lead font-weight-bolder">ID: {{ c_user.pk }}</p>
+                            <p class="lead font-weight-bolder">ФИО: {{ c_user.surname }} {{ c_user.name }} {{ c_user.patronymic }}</p>
+                        </div>
+                        <div class="nk-modal-action mt-5 block-gr">
+                            <button class="btn btn-lg btn-mw btn-danger block-btn" data-dismiss="modal">Заблокировать</button>
+                            <button class="btn btn-lg btn-mw btn-light" data-dismiss="modal">Назад</button>
+                        </div>
+                    </div>
+                </div><!-- .modal-body -->
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" tabindex="-1" id="modalAlert3" style="display: none;" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-body modal-body-lg text-center">
+                    <div class="nk-modal">
+                        <em class="nk-modal-icon icon icon-circle icon-circle-xxl ni ni-power bg-success"></em>
+                        <h4 class="nk-modal-title">Разблокировка акканта</h4>
+                        <div class="nk-modal-text">
+                            <p class="lead">Вы уверенны что хотите разблокировать данного пользователя?</p>
+                            <p class="lead font-weight-bolder">ID: {{ c_user.pk }}</p>
+                            <p class="lead font-weight-bolder">ФИО: {{ c_user.surname }} {{ c_user.name }} {{ c_user.patronymic }}</p>
+                        </div>
+                        <div class="nk-modal-action mt-5 unblock-gr">
+                            <button class="btn btn-lg btn-mw btn-success unblock-btn" data-dismiss="modal">Разблокировать</button>
+                            <button class="btn btn-lg btn-mw btn-light" data-dismiss="modal">Назад</button>
+                        </div>
+                    </div>
+                </div><!-- .modal-body -->
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" tabindex="-1" id="modalAlert4" style="display: none;" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-body modal-body-lg text-center">
+                    <div class="nk-modal">
+                        <em class="nk-modal-icon icon icon-circle icon-circle-xxl ni ni-security bg-warning"></em>
+                        <h4 class="nk-modal-title">Сделать администратором</h4>
+                        <div class="nk-modal-text">
+                            <p class="lead">Вы уверенны что хотите сделать данного пользователя администратором?</p>
+                            <p class="lead font-weight-bolder">ID: {{ c_user.pk }}</p>
+                            <p class="lead font-weight-bolder">ФИО: {{ c_user.surname }} {{ c_user.name }} {{ c_user.patronymic }}</p>
+                        </div>
+                        <div class="nk-modal-action mt-5 giveadmin-gr">
+                            <button class="btn btn-lg btn-mw btn-warning giveadmin-btn" data-dismiss="modal">Выдать администратора</button>
+                            <button class="btn btn-lg btn-mw btn-light" data-dismiss="modal">Назад</button>
+                        </div>
+                    </div>
+                </div><!-- .modal-body -->
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" tabindex="-1" id="modalAlert5" style="display: none;" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-body modal-body-lg text-center">
+                    <div class="nk-modal">
+                        <em class="nk-modal-icon icon icon-circle icon-circle-xxl ni ni-shield-off bg-danger"></em>
+                        <h4 class="nk-modal-title">Забрать Администратора</h4>
+                        <div class="nk-modal-text">
+                            <p class="lead">Вы уверенны что хотите забарть у данного пользователя администратора?</p>
+                            <p class="lead font-weight-bolder">ID: {{ c_user.pk }}</p>
+                            <p class="lead font-weight-bolder">ФИО: {{ c_user.surname }} {{ c_user.name }} {{ c_user.patronymic }}</p>
+                        </div>
+                        <div class="nk-modal-action mt-5 ungiveadmin-gr">
+                            <button class="btn btn-lg btn-mw btn-danger ungiveadmin-btn" data-dismiss="modal">Забрать администратора</button>
+                            <button class="btn btn-lg btn-mw btn-light" data-dismiss="modal">Назад</button>
+                        </div>
+                    </div>
+                </div><!-- .modal-body -->
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" tabindex="-1" id="modalAlert6" style="display: none;" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-body modal-body-lg text-center">
+                    <div class="nk-modal">
+                        <em class="nk-modal-icon icon icon-circle icon-circle-xxl ni ni-star-fill bg-primary"></em>
+                        <h4 class="nk-modal-title">Выдать статус "Блогер"</h4>
+                        <div class="nk-modal-text">
+                            <p class="lead">Вы уверенны что хотите выдать данному пользователю статус "Блогер"?</p>
+                            <p class="lead font-weight-bolder">ID: {{ c_user.pk }}</p>
+                            <p class="lead font-weight-bolder">ФИО: {{ c_user.surname }} {{ c_user.name }} {{ c_user.patronymic }}</p>
+                        </div>
+                        <div class="nk-modal-action mt-5 givebloger-gr">
+                            <button class="btn btn-lg btn-mw btn-primary givebloger-btn" data-dismiss="modal">Выдать</button>
+                            <button class="btn btn-lg btn-mw btn-light" data-dismiss="modal">Назад</button>
+                        </div>
+                    </div>
+                </div><!-- .modal-body -->
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" tabindex="-1" id="modalAlert7" style="display: none;" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-body modal-body-lg text-center">
+                    <div class="nk-modal">
+                        <em class="nk-modal-icon icon icon-circle icon-circle-xxl ni ni-star bg-secondary"></em>
+                        <h4 class="nk-modal-title">Выдать статус "Стандарт"</h4>
+                        <div class="nk-modal-text">
+                            <p class="lead">Вы уверенны что хотите выдать данному пользователю статус "Стандарт"?</p>
+                            <p class="lead font-weight-bolder">ID: {{ c_user.pk }}</p>
+                            <p class="lead font-weight-bolder">ФИО: {{ c_user.surname }} {{ c_user.name }} {{ c_user.patronymic }}</p>
+                        </div>
+                        <div class="nk-modal-action mt-5 ungivebloger-gr">
+                            <button class="btn btn-lg btn-mw btn-secondary ungivebloger-btn" data-dismiss="modal">Выдать</button>
+                            <button class="btn btn-lg btn-mw btn-light" data-dismiss="modal">Назад</button>
+                        </div>
+                    </div>
+                </div><!-- .modal-body -->
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+{% block scripts %}
+<script>
+    'use strict';
+    $(document).ready(function () {
+
+
+        {% block u_scripts %}
+        {% endblock %}
+
+        $('.block-gr').on('click', '.block-btn',function()
+        {
+            const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+
+            var ready = true;
+            if(ready){
+                $.ajax
+                ({
+                    data:
+                        {
+                            csrfmiddlewaretoken: csrftoken,
+                            action: 'block'
+                        }, // get the form data
+                    type: "POST", // GET or POST
+                    url: "{% url 'staff_user_view' c_user.pk %}",
+                    // on success
+                    success: function (response)
+                    {
+                        window.location.replace('{{ request.build_absolute_uri }}');
+                    },
+                    // on error
+                    error: function (response)
+                    {
+                        Swal.fire("Ошибка", response.responseJSON.errors, "error");
+                    }
+                });
+            }
+        });
+
+        $('.unblock-gr').on('click', '.unblock-btn',function()
+        {
+            const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+
+            var ready = true;
+            if(ready){
+                $.ajax
+                ({
+                    data:
+                        {
+                            csrfmiddlewaretoken: csrftoken,
+                            action: 'unblock'
+                        }, // get the form data
+                    type: "POST", // GET or POST
+                    url: "{% url 'staff_user_view' c_user.pk %}",
+                    // on success
+                    success: function (response)
+                    {
+                        window.location.replace('{{ request.build_absolute_uri }}');
+                    },
+                    // on error
+                    error: function (response)
+                    {
+                        Swal.fire("Ошибка", response.responseJSON.errors, "error");
+                    }
+                });
+            }
+        });
+
+        $('.giveadmin-gr').on('click', '.giveadmin-btn',function()
+        {
+            const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+
+            var ready = true;
+            if(ready){
+                $.ajax
+                ({
+                    data:
+                        {
+                            csrfmiddlewaretoken: csrftoken,
+                            action: 'giveadmin'
+                        }, // get the form data
+                    type: "POST", // GET or POST
+                    url: "{% url 'staff_user_view' c_user.pk %}",
+                    // on success
+                    success: function (response)
+                    {
+                        window.location.replace('{{ request.build_absolute_uri }}');
+                    },
+                    // on error
+                    error: function (response)
+                    {
+                        Swal.fire("Ошибка", response.responseJSON.errors, "error");
+                    }
+                });
+            }
+        });
+
+        $('.ungiveadmin-gr').on('click', '.ungiveadmin-btn',function()
+        {
+            const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+
+            var ready = true;
+            if(ready){
+                $.ajax
+                ({
+                    data:
+                        {
+                            csrfmiddlewaretoken: csrftoken,
+                            action: 'ungiveadmin'
+                        }, // get the form data
+                    type: "POST", // GET or POST
+                    url: "{% url 'staff_user_view' c_user.pk %}",
+                    // on success
+                    success: function (response)
+                    {
+                        window.location.replace('{{ request.build_absolute_uri }}');
+                    },
+                    // on error
+                    error: function (response)
+                    {
+                        Swal.fire("Ошибка", response.responseJSON.errors, "error");
+                    }
+                });
+            }
+        });
+
+        $('.givebloger-gr').on('click', '.givebloger-btn',function()
+        {
+            const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+
+            var ready = true;
+            if(ready){
+                $.ajax
+                ({
+                    data:
+                        {
+                            csrfmiddlewaretoken: csrftoken,
+                            action: 'givebloger'
+                        }, // get the form data
+                    type: "POST", // GET or POST
+                    url: "{% url 'staff_user_view' c_user.pk %}",
+                    // on success
+                    success: function (response)
+                    {
+                        window.location.replace('{{ request.build_absolute_uri }}');
+                    },
+                    // on error
+                    error: function (response)
+                    {
+                        Swal.fire("Ошибка", response.responseJSON.errors, "error");
+                    }
+                });
+            }
+        });
+
+        $('.ungivebloger-gr').on('click', '.ungivebloger-btn',function()
+        {
+            const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+
+            var ready = true;
+            if(ready){
+                $.ajax
+                ({
+                    data:
+                        {
+                            csrfmiddlewaretoken: csrftoken,
+                            action: 'ungivebloger'
+                        }, // get the form data
+                    type: "POST", // GET or POST
+                    url: "{% url 'staff_user_view' c_user.pk %}",
+                    // on success
+                    success: function (response)
+                    {
+                        window.location.replace('{{ request.build_absolute_uri }}');
+                    },
+                    // on error
+                    error: function (response)
+                    {
+                        Swal.fire("Ошибка", response.responseJSON.errors, "error");
+                    }
+                });
+            }
+        });
+    });
+</script>
+{% endblock %}

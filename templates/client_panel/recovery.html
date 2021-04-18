@@ -1,0 +1,146 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="zxx" class="js">
+
+<head>
+    <base href="../../../">
+    <meta charset="utf-8">
+    <meta name="author" content="UNICY">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="A powerful and conceptual apps base dashboard template that especially build for developers and programmers.">
+    <!-- Fav Icon  -->
+    <link rel="shortcut icon" href="./images/favicon.png">
+    <!-- Page Title  -->
+    <title>Восстановление пароля</title>
+    <!-- StyleSheets  -->
+    <link rel="stylesheet" href="{% static 'user_panel/assets/css/dashlite.css' %}?ver=2.2.0">
+    <link id="skin-default" rel="stylesheet" href="./assets/css/theme.css?ver=2.2.0">
+</head>
+
+<body class="nk-body bg-white npc-general pg-auth">
+<div class="nk-app-root">
+    <!-- main @s -->
+    <div class="nk-main ">
+        <!-- wrap @s -->
+        <div class="nk-wrap nk-wrap-nosidebar">
+            <!-- content @s -->
+            <div class="nk-content ">
+                <div class="nk-block nk-block-middle nk-auth-body wide-xs">
+                    <div class="brand-logo pb-4 text-center">
+                        <a href="html/index.html" class="logo-link">
+                            <img class="logo-light logo-img logo-img-lg" src="./images/logo.png" srcset="./images/logo2x.png 2x" alt="logo">
+                            <img class="logo-dark logo-img logo-img-lg" src="./images/logo-dark.png" srcset="./images/logo-dark2x.png 2x" alt="logo-dark">
+                        </a>
+                    </div>
+                    <div class="card card-bordered">
+                        <div class="card-inner card-inner-lg">
+                            <div class="nk-block-head">
+                                <div class="nk-block-head-content">
+                                    <h4 class="nk-block-title">Восстановление</h4>
+                                    <div class="nk-block-des">
+                                        <p id="p-text">Введите новый пароль</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <form class="login-steps" id="loginform">
+                                {% csrf_token %}
+                                <div class="form-group" id="passgr">
+                                    <label class="form-label" for="name">Пароль</label>
+                                    <input type="password" class="form-control form-control-lg" id="pass" name="pass" placeholder="" value="">
+                                </div>
+                                <div class="form-group" id="rpassgr">
+                                    <label class="form-label" for="name">Повторите пароль</label>
+                                    <input type="password" class="form-control form-control-lg" id="rpass" name="rpass" placeholder="" value="">
+                                </div>
+                                <div class="form-group">
+                                    <button type="button" class="btn btn-lg btn-primary btn-block continue-button" id="continue-button">Сменить пароль</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    <div class="nk-footer nk-auth-footer-full">
+                        <div class="container wide-lg">
+                            <div class="row g-3">
+                                <div class="col-lg-6 order-lg-last">
+                                    <ul class="nav nav-sm justify-content-center justify-content-lg-end">
+                                        <li class="nav-item">
+                                            <a class="nav-link" href="#">Правила</a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link" href="#">Faq</a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link" href="#">Помощь</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="nk-block-content text-center text-lg-left">
+                                        <p class="text-soft">&copy; 2021 EMG. Все права защищены.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- wrap @e -->
+            </div>
+            <!-- content @e -->
+        </div>
+        <!-- main @e -->
+    </div>
+    <!-- app-root @e -->
+    <!-- JavaScript -->
+    <script src="{% static 'user_panel/assets/js/bundle.js' %}?ver=2.2.0"></script>
+    <script src="{% static 'user_panel/assets/js/scripts.js' %}?ver=2.2.0"></script>
+    <script>
+        'use strict';
+        $(document).ready(function () {
+            var pass;
+            var rpass;
+            var readycode = (
+                '<div class="form-group">' +
+                '<a href="{% url 'client_signin' %}" class="btn btn-lg btn-primary btn-block ready-button" id="ready-button">Войти</a>' +
+                '</div>');
+
+            $('.login-steps').on('click', '.continue-button',function()
+            {
+                const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+                var elPass = document.getElementById('pass');
+                var elRPass = document.getElementById('rpass');
+                pass = elPass.value.trim();
+                rpass = elRPass.value.trim();
+
+                var ready = true
+                if(ready){
+                    $.ajax
+                    ({
+                        data:
+                            {
+                                csrfmiddlewaretoken: csrftoken,
+                                pass: pass,
+                                rpass: rpass,
+                                action: 'step-1'
+                            }, // get the form data
+                        type: "POST", // GET or POST
+                        url: "{% url 'client_recovery' code %}",
+                        // on success
+                        success: function (response)
+                        {
+                            document.getElementById('passgr').remove();
+                            document.getElementById('rpassgr').remove();
+                            document.getElementById('continue-button').remove();
+                            document.getElementById('p-text').innerHTML = 'Пароль изменен';
+                            $('#loginform').append(readycode);
+                        },
+                        // on error
+                        error: function (response)
+                        {
+                            Swal.fire("Ошибка", response.responseJSON.errors, "error");
+                        }
+                    });
+                }
+            });
+        });
+    </script>
+</html>

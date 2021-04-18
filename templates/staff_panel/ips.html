@@ -1,0 +1,28 @@
+{% extends 'staff_panel/_userblank.html' %}
+{% load static %}
+
+{% block usrcontent %}
+    <div class="">
+    <table class="table table-ulogs">
+        <thead class="thead-light">
+        <tr>
+            <!--<th class="tb-col-os"><span class="overline-title">Устройство</span></span></th>-->
+            <th class="tb-col-os"><span class="overline-title">IP</span></th>
+            <th class="tb-col-time"><span class="overline-title">Время</span></th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for ip in ips %}
+        <tr>
+            <!--<td class="tb-col-os">Chrome on Window</td>-->
+            <td class="tb-col-os"><span class="sub-text">{{ ip.address }}</span></td>
+            <td class="tb-col-time"><span class="sub-text">{{ ip.last_activity }}</span></td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}
+
+{% block u_scripts %}
+{% endblock %}

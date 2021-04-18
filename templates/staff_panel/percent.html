@@ -1,0 +1,135 @@
+{% extends 'staff_panel/_userblank.html' %}
+{% load static %}
+
+{% block usrcontent %}
+    <div class="card-inner">
+
+        <div class="nk-block">
+            <span class="preview-title-lg overline-title">ПРОЦЕНТЫ</span>
+            <form method="POST">{% csrf_token %}
+                <div class="form-group">
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <div class="input-group-text" id="btnGroupAddon">1 УРОВЕНЬ</div>
+                        </div>
+                        <input type="text" class="form-control" placeholder="Процент" aria-label="" aria-describedby="btnGroupAddon" value="{{ c_user.referal_card.level1_percent.normalize }}" name="p_level_1">
+                        <div class="input-group-append">
+                            <div class="input-group-text" id="btnGroupAddon">%</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <div class="input-group-text" id="btnGroupAddon">2 УРОВЕНЬ</div>
+                        </div>
+                        <input type="text" class="form-control" placeholder="Процент" aria-label="" aria-describedby="btnGroupAddon" value="{{ c_user.referal_card.level2_percent.normalize }}" name="p_level_2">
+                        <div class="input-group-append">
+                            <div class="input-group-text" id="btnGroupAddon">%</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <div class="input-group-text" id="btnGroupAddon">3 УРОВЕНЬ</div>
+                        </div>
+                        <input type="text" class="form-control" placeholder="Процент" aria-label="" aria-describedby="btnGroupAddon" value="{{ c_user.referal_card.level3_percent.normalize }}" name="p_level_3">
+                        <div class="input-group-append">
+                            <div class="input-group-text" id="btnGroupAddon">%</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <div class="input-group-text" id="btnGroupAddon">4 УРОВЕНЬ</div>
+                        </div>
+                        <input type="text" class="form-control" placeholder="Процент" aria-label="" aria-describedby="btnGroupAddon" value="{{ c_user.referal_card.level4_percent.normalize }}" name="p_level_4">
+                        <div class="input-group-append">
+                            <div class="input-group-text" id="btnGroupAddon">%</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <div class="input-group-text" id="btnGroupAddon">5 УРОВЕНЬ</div>
+                        </div>
+                        <input type="text" class="form-control" placeholder="Процент" aria-label="" aria-describedby="btnGroupAddon" value="{{ c_user.referal_card.level5_percent.normalize }}" name="p_level_5">
+                        <div class="input-group-append">
+                            <div class="input-group-text" id="btnGroupAddon">%</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <div class="input-group-text" id="btnGroupAddon">6 УРОВЕНЬ</div>
+                        </div>
+                        <input type="text" class="form-control" placeholder="Процент" aria-label="" aria-describedby="btnGroupAddon" value="{{ c_user.referal_card.level6_percent.normalize }}" name="p_level_6">
+                        <div class="input-group-append">
+                            <div class="input-group-text" id="btnGroupAddon">%</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <div class="input-group-text" id="btnGroupAddon">7 УРОВЕНЬ</div>
+                        </div>
+                        <input type="text" class="form-control" placeholder="Процент" aria-label="" aria-describedby="btnGroupAddon" value="{{ c_user.referal_card.level7_percent.normalize }}" name="p_level_7">
+                        <div class="input-group-append">
+                            <div class="input-group-text" id="btnGroupAddon">%</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <div class="input-group-text" id="btnGroupAddon">8 УРОВЕНЬ</div>
+                        </div>
+                        <input type="text" class="form-control" placeholder="Процент" aria-label="" aria-describedby="btnGroupAddon" value="{{ c_user.referal_card.level8_percent.normalize }}" name="p_level_8">
+                        <div class="input-group-append">
+                            <div class="input-group-text" id="btnGroupAddon">%</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <div class="input-group-text" id="btnGroupAddon">9 УРОВЕНЬ</div>
+                        </div>
+                        <input type="text" class="form-control" placeholder="Процент" aria-label="" aria-describedby="btnGroupAddon" value="{{ c_user.referal_card.level9_percent.normalize }}" name="p_level_9">
+                        <div class="input-group-append">
+                            <div class="input-group-text" id="btnGroupAddon">%</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <div class="input-group-text" id="btnGroupAddon">10 УРОВЕНЬ</div>
+                        </div>
+                        <input type="text" class="form-control" placeholder="Процент" aria-label="" aria-describedby="btnGroupAddon" value="{{ c_user.referal_card.level10_percent.normalize }}" name="p_level_10">
+                        <div class="input-group-append">
+                            <div class="input-group-text" id="btnGroupAddon">%</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <input type="hidden" name="savepercent">
+                    <button type="submit" class="btn btn-primary">Сохранить</button>
+                </div>
+            </form>
+        </div><!-- .nk-block -->
+    </div>
+{% endblock %}
+{% block u_scripts %}
+    {% if success == '1' %}
+        Swal.fire("Успешно", "Данные обновлены", "success");
+    {% endif %}
+    {% if success == '2' %}
+        Swal.fire("Ошибка", '{{ error }}', "error");
+    {% endif %}
+{% endblock %}
