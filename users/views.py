@@ -176,9 +176,7 @@ def signup(request):
                 password = request.POST['pass']
                 rpassword = request.POST['rpass']
                 try:
-                    print('R1')
                     registerNewClient(phonenumber=phonenumber, phonecode=phonecode, email=email, name=name, surname=surname, password=password, rpassword=rpassword)
-                    print('R1')
                     user = authenticate(request, email=email, password=password)
                     host = str(request.get_host())
                     sendEmailVerification(user, host=host, type=1)

@@ -1,8 +1,6 @@
-from django.shortcuts import render, redirect, reverse
-from users.models import UserIP, ReferalCard
-from django.utils import timezone
+from django.shortcuts import render, redirect
+from users.models import ReferalCard
 
-# Create your views here.
 
 def referal_url(request, ref_code):
     user = request.user

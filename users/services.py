@@ -4,14 +4,16 @@ from random import randint
 import random
 from phonenumber_field.validators import validate_international_phonenumber
 from django.contrib.auth.password_validation import validate_password
-import re
-from re import *
 from django.core.validators import validate_email
 from django.core.exceptions import ValidationError
 from django.contrib.auth.hashers import make_password
 from django.core.mail import send_mail
 from datetime import datetime, timedelta
 from etgProject.celery import app
+from django.conf import settings
+import redis
+redis_instance = redis.StrictRedis(host=settings.REDIS_HOST,
+                                   port=settings.REDIS_PORT, db=0)
 
 def register_new_phonenumber(number):
     phonenumber = UserPhoneNumber.objects.filter(number=number)
@@ -24,21 +26,17 @@ def register_new_phonenumber(number):
         return True
 
 def send_sms_registration(number):
-    phonenumber = UserPhoneNumber.objects.get(number=number)
     #code = str(randint(0,9)) + str(randint(0,9)) + str(randint(0,9)) + str(randint(0,9)) + str(randint(0,9)) + str(randint(0,9))
     code = '000'
-    phonenumber.code = code
-    phonenumber.save()
+    redis_instance.set(number,code.encode('utf8'),300)
     smsc = SMSC()
     r = smsc.send_sms(number, "Ваш код для продолжения регистрации: " + str(code) + ". Никому не сообщайте его!", sender="sms")
     return True
 
 def send_sms_login(number):
-    phonenumber = UserPhoneNumber.objects.get(number=number)
     #code = str(randint(0,9)) + str(randint(0,9)) + str(randint(0,9)) + str(randint(0,9)) + str(randint(0,9)) + str(randint(0,9))
     code = '000'
-    phonenumber.code = code
-    phonenumber.save()
+    redis_instance.set(number,code.encode('utf8'),300)
     smsc = SMSC()
     r = smsc.send_sms(number, "Ваш код для входа: " + str(code) + ". Никому не сообщайте его!", sender="sms")
     return True
@@ -63,7 +61,11 @@ def validatePass(password):
 
 def checkLoginCode(code, user):
     if user.phone_number != None:
-        if user.phone_number.code == code:
+        r_code = redis_instance.get(user.char_number).decode('utf8')
+        if r_code == None:
+            raise Exception('Неверный код')
+        if r_code == code:
+            redis_instance.delete(user.char_number)
             return True
         else:
             raise Exception('Неверный код')
@@ -134,7 +136,7 @@ def registerNewClient(phonenumber, phonecode, email, name, surname, password, rp
     if UserPhoneNumber.objects.filter(number=phonenumber).exists():
         userphonenumber = UserPhoneNumber.objects.get(number=phonenumber)
         if not userphonenumber.phone_number_user.exists():
-            if str(userphonenumber.code) == str(phonecode):
+            if redis_instance.get(str(userphonenumber.number)).decode('utf8') == str(phonecode):
                 if validateEmail(email=email):
                     if not User.objects.filter(email=email).exists():
                         if name != '' and surname != '':
