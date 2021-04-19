@@ -4,6 +4,7 @@
 from datetime import datetime
 from time import sleep
 import smtplib
+from etgProject import settings
 
 try:
     from urllib import urlopen, quote
@@ -12,18 +13,18 @@ except ImportError:
     from urllib.parse import quote
 
 # Константы для настройки библиотеки
-SMSC_LOGIN = "andreyvelikanovv"            # логин клиента
-SMSC_PASSWORD = "Andreyvel0099"    # пароль
-SMSC_POST = False                # использовать метод POST
-SMSC_HTTPS = False                # использовать HTTPS протокол
-SMSC_CHARSET = "utf-8"            # кодировка сообщения (windows-1251 или koi8-r), по умолчанию используется utf-8
-SMSC_DEBUG = False                # флаг отладки
+SMSC_LOGIN = settings.SMSCRU_LOGIN           # логин клиента
+SMSC_PASSWORD = settings.SMSCRU_PASSWORD
+SMSC_POST = settings.SMSCRU_POST                # использовать метод POST
+SMSC_HTTPS = settings.SMSCRU_HTTPS               # использовать HTTPS протокол
+SMSC_CHARSET = settings.SMSCRU_CHARSET          # кодировка сообщения (windows-1251 или koi8-r), по умолчанию используется utf-8
+SMSC_DEBUG = settings.SMSCRU_DEBUG                # флаг отладки
 
 # Константы для отправки SMS по SMTP
-SMTP_FROM = "api@smsc.ru"        # e-mail адрес отправителя
-SMTP_SERVER = "send.smsc.ru"    # адрес smtp сервера
-SMTP_LOGIN = ""                    # логин для smtp сервера
-SMTP_PASSWORD = ""                # пароль для smtp сервера
+SMTP_FROM = settings.SMSCRU_SMTP_FROM       # e-mail адрес отправителя
+SMTP_SERVER = settings.SMSCRU_SMTP_SERVER    # адрес smtp сервера
+SMTP_LOGIN = settings.SMSCRU_SMTP_LOGIN                    # логин для smtp сервера
+SMTP_PASSWORD = settings.SMSCRU_SMTP_PASSWORD             # пароль для smtp сервера
 
 # Вспомогательная функция, эмуляция тернарной операции ?:
 def ifs(cond, val1, val2):

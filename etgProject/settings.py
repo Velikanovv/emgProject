@@ -60,6 +60,19 @@ INSTALLED_APPS = [
 
 PHONENUMBER_DB_FORMAT = 'INTERNATIONAL'
 
+SMSCRU_LOGIN = "andreyvelikanovv"            # логин клиента
+SMSCRU_PASSWORD = "Andreyvel0099"    # пароль
+SMSCRU_POST = False                # использовать метод POST
+SMSCRU_HTTPS = False                # использовать HTTPS протокол
+SMSCRU_CHARSET = "utf-8"            # кодировка сообщения (windows-1251 или koi8-r), по умолчанию используется utf-8
+SMSCRU_DEBUG = False                # флаг отладки
+
+# Константы для отправки SMS по SMTP
+SMSCRU_SMTP_FROM = "api@smsc.ru"        # e-mail адрес отправителя
+SMSCRU_SMTP_SERVER = "send.smsc.ru"    # адрес smtp сервера
+SMSCRU_SMTP_LOGIN = ""                    # логин для smtp сервера
+SMSCRU_SMTP_PASSWORD = ""
+
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -78,9 +91,6 @@ STATIC_URL = '/static/'
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
-
-REDIS_HOST = 'localhost'
-REDIS_PORT = 6379
 
 
 TEMPLATES = [
@@ -104,7 +114,7 @@ TEMPLATES = [
 WSGI_APPLICATION = 'etgProject.wsgi.application'
 
 
-# Database
+# DATABASE
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
 
 DATABASES = {
@@ -166,6 +176,10 @@ USE_L10N = True
 
 USE_TZ = True
 
+
+
+REDIS_HOST = 'localhost'
+REDIS_PORT = 6379
 
 # CELERY
 # Celery Configuration Options
