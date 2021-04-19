@@ -50,3 +50,11 @@ python manage.py runserver
 ```
 
 3. Navigate to http://127.0.0.1:8000/ or http://127.0.0.1:8000/admin
+
+## SuperUser
+
+1. Create SuperUser 
+```bash
+python manage.py createsuperuser
+```
+
