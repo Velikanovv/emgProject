@@ -120,11 +120,11 @@ WSGI_APPLICATION = 'etgProject.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'TEST2',
-        'USER': 'postgres',
-        'PASSWORD': 'admin',
-        'HOST': 'localhost',
-        'PORT': '5432',
+        'NAME': os.getenv("DB_NAME"),
+        'USER': os.getenv("DB_USER"),
+        'PASSWORD': os.getenv("DB_PASSWORD"),
+        'HOST': os.getenv("DB_HOST"),
+        'PORT': os.getenv("DB_PORT"),
     }
 }
 SOLO_ADMIN_SKIP_OBJECT_LIST_PAGE = False
@@ -168,8 +168,6 @@ EMAIL_HOST_PASSWORD = "AndreyVel0099"
 
 LANGUAGE_CODE = 'en-us'
 
-CELERY_TIMEZONE = 'Europe/Moscow'
-
 USE_I18N = True
 
 USE_L10N = True
@@ -183,15 +181,15 @@ REDIS_PORT = 6379
 
 # CELERY
 # Celery Configuration Options
-CELERY_TIMEZONE = 'Europe/Moscow'
-CELERY_TASK_TRACK_STARTED = True
-CELERY_TASK_TIME_LIMIT = 30 * 60
+CELERY_TIMEZONE = os.getenv("CELERY_TIMEZONE")
+CELERY_TASK_TRACK_STARTED = os.getenv("CELERY_TASK_TRACK_STARTED")
+CELERY_TASK_TIME_LIMIT = os.getenv("CELERY_TASK_TIME_LIMIT")
 
-CELERY_BROKER_URL = "redis://:p8c6ac04c8fd5022c66eff9152fbb6ff861bd7ff08b013d4335b8f7fbc1f72111@ec2-54-77-86-248.eu-west-1.compute.amazonaws.com:29589"
+CELERY_BROKER_URL = os.getenv("CELERY_BROKER_URL")
 CELERY_BROKER_TRANSPORT_OPTIONS = {'visibility_timeout': 3600}
-CELERY_RESULT_BACKEND = "redis://:p8c6ac04c8fd5022c66eff9152fbb6ff861bd7ff08b013d4335b8f7fbc1f72111@ec2-54-77-86-248.eu-west-1.compute.amazonaws.com:29589"
-CELERY_TASK_SERIALIZER = 'json'
-CELERY_RESULT_SERIALIZER = 'json'
+CELERY_RESULT_BACKEND = os.getenv("CELERY_RESULT_BACKEND")
+CELERY_TASK_SERIALIZER = os.getenv("CELERY_TASK_SERIALIZER")
+CELERY_RESULT_SERIALIZER = os.getenv("CELERY_RESULT_SERIALIZER")
 
 
 

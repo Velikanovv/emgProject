@@ -1,0 +1,37 @@
+version: '3'
+
+services:
+  py:
+    build:
+      context: .
+      dockerfile: Docker/py/Dockerfile
+      target: api
+    env_file:
+      - .env
+    depends_on:
+      - db
+      - redis
+    ports:
+    - 8000:8000
+    restart: always
+    volumes:
+      - ./:/app:ro
+
+  db:
+    image: postgres
+    env_file:
+      - .env
+    volumes:
+      - db-data:/var/lib/postgresql/data:rw
+      # you may use a bind-mounted host directory instead, so that it is harder to accidentally remove the volume and lose all your data!
+      # - ./api/docker/db/data:/var/lib/postgresql/data:rw
+    ports:
+      - target: 5432
+        published: 5432
+        protocol: tcp
+
+  redis:
+    image: "redis:alpine"
+
+volumes:
+  db-data: {}
