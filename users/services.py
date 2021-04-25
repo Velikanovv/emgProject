@@ -29,16 +29,16 @@ def send_sms_registration(number):
     #code = str(randint(0,9)) + str(randint(0,9)) + str(randint(0,9)) + str(randint(0,9)) + str(randint(0,9)) + str(randint(0,9))
     code = '000'
     redis_instance.set(number,code.encode('utf8'),300)
-    smsc = SMSC()
-    r = smsc.send_sms(number, "Ваш код для продолжения регистрации: " + str(code) + ". Никому не сообщайте его!", sender="sms")
+    #smsc = SMSC()
+    #r = smsc.send_sms(number, "Ваш код для продолжения регистрации: " + str(code) + ". Никому не сообщайте его!", sender="sms")
     return True
 
 def send_sms_login(number):
     #code = str(randint(0,9)) + str(randint(0,9)) + str(randint(0,9)) + str(randint(0,9)) + str(randint(0,9)) + str(randint(0,9))
     code = '000'
     redis_instance.set(number,code.encode('utf8'),300)
-    smsc = SMSC()
-    r = smsc.send_sms(number, "Ваш код для входа: " + str(code) + ". Никому не сообщайте его!", sender="sms")
+    #smsc = SMSC()
+    #r = smsc.send_sms(number, "Ваш код для входа: " + str(code) + ". Никому не сообщайте его!", sender="sms")
     return True
 
 def validateEmail(email):

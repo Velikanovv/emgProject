@@ -9,3 +9,6 @@ from .serializers import *
 class FaqListView(generics.ListAPIView):
     queryset = Faq.objects.all()
     serializer_class = FaqSerializer
+
+class FaqView(generics.GenericAPIView):
+    serializer_class = FaqSerializer
