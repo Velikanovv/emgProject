@@ -1,0 +1,9 @@
+version: '3'
+
+services:
+  py:
+    volumes:
+      - ./:/app:ro
+
+volumes:
+  db-data: {}

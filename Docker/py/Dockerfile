@@ -6,4 +6,4 @@ RUN apk add --no-cache postgresql-libs libjpeg-turbo-dev zlib-dev &&\
     pip install -r requirements.txt --no-cache-dir &&\
     apk --purge del .build-deps     
 EXPOSE 8000
-CMD python manage.py runserver
+CMD ./start.sh
